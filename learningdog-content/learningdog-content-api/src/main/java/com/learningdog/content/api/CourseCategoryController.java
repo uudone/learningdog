@@ -1,10 +1,15 @@
 package com.learningdog.content.api;
 
+import com.learningdog.content.model.dto.CourseCategoryTreeDto;
 import com.learningdog.content.service.CourseCategoryService;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * <p>
@@ -15,9 +20,15 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Slf4j
 @RestController
-@RequestMapping("courseCategory")
+@RequestMapping("course-category")
 public class CourseCategoryController {
 
-    @Autowired
+    @Resource
     private CourseCategoryService  courseCategoryService;
+
+    @ApiOperation("课程类型树形结构查询接口")
+    @GetMapping("/tree-nodes")
+    public List<CourseCategoryTreeDto> queryTreeNodes(){
+        return courseCategoryService.queryTreeNodes("1");
+    }
 }

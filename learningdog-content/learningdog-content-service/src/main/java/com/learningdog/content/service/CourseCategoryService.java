@@ -1,7 +1,10 @@
 package com.learningdog.content.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.learningdog.content.model.dto.CourseCategoryTreeDto;
 import com.learningdog.content.model.po.CourseCategory;
+
+import java.util.List;
 
 /**
  * <p>
@@ -9,8 +12,13 @@ import com.learningdog.content.model.po.CourseCategory;
  * </p>
  *
  * @author getjiajia
- * @since 2023-05-24
  */
 public interface CourseCategoryService extends IService<CourseCategory> {
-
+    /**
+     * @param id:  父节点id
+     * @return List<CourseCategoryTreeDto>
+     * @author getjiajia
+     * @description 课程分类树形结构查询
+     */
+    List<CourseCategoryTreeDto> queryTreeNodes(String id);
 }
