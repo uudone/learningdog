@@ -1,0 +1,21 @@
+server:
+  servlet:
+    context-path: /system
+  port: 63110
+spring:
+  application:
+    name: system-api
+  datasource:
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://47.113.228.251:3306/lg_system?serverTimezone=UTC&userUnicode=true&useSSL=false&
+      username: root
+      password: 123456
+logging:
+  config: classpath:log4j2-dev.xml
+swagger:
+  title: "学习汪系统管理"
+  description: "系统管理接口"
+  base-package: com.learningdog.system
+  enabled: true
+  version: 1.0.0
