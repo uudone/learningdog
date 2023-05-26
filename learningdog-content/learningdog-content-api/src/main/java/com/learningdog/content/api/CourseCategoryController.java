@@ -2,6 +2,7 @@ package com.learningdog.content.api;
 
 import com.learningdog.content.model.dto.CourseCategoryTreeDto;
 import com.learningdog.content.service.CourseCategoryService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,7 @@ import java.util.List;
  */
 @Slf4j
 @RestController
+@Api("课程分类接口")
 @RequestMapping("course-category")
 public class CourseCategoryController {
 

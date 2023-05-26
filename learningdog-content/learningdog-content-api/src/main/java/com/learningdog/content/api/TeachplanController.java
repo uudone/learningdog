@@ -1,10 +1,18 @@
 package com.learningdog.content.api;
 
+import com.learningdog.content.model.dto.SaveTeachplanDto;
+import com.learningdog.content.model.dto.TeachplanTreeDto;
 import com.learningdog.content.service.TeachplanService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * <p>
@@ -15,9 +23,42 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Slf4j
 @RestController
-@RequestMapping("teachplan")
+@Api("课程计划接口")
+@RequestMapping("/teachplan")
 public class TeachplanController {
 
-    @Autowired
+    @Resource
     private TeachplanService  teachplanService;
+
+    @ApiOperation("查询课程计划树形结构")
+    @GetMapping("/{courseId}/tree-nodes")
+    @ApiImplicitParam(value = "courseId",name = "课程Id",required = true,dataType = "Long",paramType = "path")
+    public List<TeachplanTreeDto> getTreeNodes(@PathVariable("courseId") Long courseId){
+        return teachplanService.getTreeNodes(courseId);
+    }
+
+    @ApiOperation("新增或修改课程计划")
+    @PostMapping
+    public void saveTeachplan(@RequestBody @Validated SaveTeachplanDto saveTeachplanDto){
+        teachplanService.saveTeachplan(saveTeachplanDto);
+    }
+
+    @ApiOperation("课程计划向下移动")
+    @PostMapping("/movedown/{teachplanId}")
+    public void movedownTeachplan(@PathVariable("teachplanId")Long teachplanId){
+        teachplanService.movedownTeachplan(teachplanId);
+    }
+
+    @ApiOperation("课程计划向上移动")
+    @PostMapping("/moveup/{teachplanId}")
+    public void moveupTeachplan(@PathVariable("teachplanId")Long teachplanId){
+        teachplanService.moveupTeachplan(teachplanId);
+    }
+
+    @ApiOperation("删除课程计划")
+    @DeleteMapping("{teachplanId}")
+    public void deleteTeachplan(@PathVariable("teachplanId")Long teachplanId){
+        teachplanService.deleteTeachplanById(teachplanId);
+    }
+
 }

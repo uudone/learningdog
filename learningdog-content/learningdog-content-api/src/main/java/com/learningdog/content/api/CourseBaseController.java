@@ -9,6 +9,8 @@ import com.learningdog.content.model.dto.EditCourseDto;
 import com.learningdog.content.model.dto.QueryCourseParamsDto;
 import com.learningdog.content.model.po.CourseBase;
 import com.learningdog.content.service.CourseBaseService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -25,6 +27,7 @@ import javax.annotation.Resource;
  */
 @Slf4j
 @RestController
+@Api("课程基本信息接口")
 @RequestMapping("/course")
 public class CourseBaseController {
     @Resource
@@ -48,6 +51,7 @@ public class CourseBaseController {
 
     @ApiOperation("根据课程id查询课程基本信息")
     @GetMapping("/{courseId}")
+    @ApiImplicitParam(value = "courseId",name = "课程Id",required = true,dataType = "Long",paramType = "path")
     public CourseBaseInfoDto getCourseBaseById(@PathVariable("courseId") Long courseId){
         return courseBaseService.getCourseBaseById(courseId);
     }
