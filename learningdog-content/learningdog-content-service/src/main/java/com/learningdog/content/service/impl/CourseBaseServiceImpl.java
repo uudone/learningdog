@@ -95,13 +95,6 @@ public class CourseBaseServiceImpl extends ServiceImpl<CourseBaseMapper, CourseB
      * @description 根据大小分类id获取大小分类名称
      */
     private String[] getMtAndStName(String mt,String st) {
-        if (StringUtils.isBlank(mt)) {
-            throw new RuntimeException("课程分类为空");
-        }
-
-        if (StringUtils.isBlank(st)) {
-            LearningdogException.cast("课程分类为空");
-        }
         CourseCategory courseCategoryByMt=courseCategoryMapper.selectById(mt);
         CourseCategory courseCategoryBySt=courseCategoryMapper.selectById(st);
         String[] mt_st={courseCategoryByMt.getName(),courseCategoryBySt.getName()};
@@ -118,11 +111,8 @@ public class CourseBaseServiceImpl extends ServiceImpl<CourseBaseMapper, CourseB
     @Transactional
     public CourseMarket saveCourseMarket(AddCourseDto dto, Long courseId) {
         //向课程营销表保存课程营销信息
-        //合法性校验
         String charge= dto.getCharge();
-        if(StringUtils.isBlank(charge)){
-            LearningdogException.cast("收费规则没有选择");
-        }
+        //合法性校验
         if(CoursePay.CHARGE.equals(charge)){
             if(dto.getPrice()==null|| dto.getPrice().floatValue()<=0){
                 LearningdogException.cast("课程为收费价格不能为空且必须大于0");
@@ -159,26 +149,7 @@ public class CourseBaseServiceImpl extends ServiceImpl<CourseBaseMapper, CourseB
      */
     @Transactional
     public CourseBase saveCourseBase(Long companyId, AddCourseDto dto) {
-        //合法性校验
-        if (StringUtils.isBlank(dto.getName())) {
-            LearningdogException.cast("课程名称为空");
-        }
 
-        if (StringUtils.isBlank(dto.getGrade())) {
-            LearningdogException.cast("课程等级为空");
-        }
-
-        if (StringUtils.isBlank(dto.getTeachmode())) {
-            LearningdogException.cast("教育模式为空");
-        }
-
-        if (StringUtils.isBlank(dto.getUsers())) {
-            LearningdogException.cast("适应人群为空");
-        }
-
-        if (StringUtils.isBlank(dto.getCharge())) {
-            LearningdogException.cast("收费规则为空");
-        }
         //新增对象
         CourseBase courseBaseNew=new CourseBase();
         //将填写的课程信息赋值给新增对象
