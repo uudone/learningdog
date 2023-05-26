@@ -14,6 +14,7 @@ import com.learningdog.content.mapper.CourseCategoryMapper;
 import com.learningdog.content.mapper.CourseMarketMapper;
 import com.learningdog.content.model.dto.AddCourseDto;
 import com.learningdog.content.model.dto.CourseBaseInfoDto;
+import com.learningdog.content.model.dto.EditCourseDto;
 import com.learningdog.content.model.dto.QueryCourseParamsDto;
 import com.learningdog.content.model.po.CourseBase;
 import com.learningdog.content.model.po.CourseCategory;
@@ -40,11 +41,11 @@ import java.time.LocalDateTime;
 public class CourseBaseServiceImpl extends ServiceImpl<CourseBaseMapper, CourseBase> implements CourseBaseService {
 
     @Resource
+    CourseBaseService courseBaseService;
+    @Resource
     CourseBaseMapper courseBaseMapper;
-
     @Resource
     CourseMarketMapper courseMarketMapper;
-
     @Resource
     CourseCategoryMapper courseCategoryMapper;
 
@@ -74,19 +75,95 @@ public class CourseBaseServiceImpl extends ServiceImpl<CourseBaseMapper, CourseB
     @Override
     public CourseBaseInfoDto createCourseBase(Long companyId, AddCourseDto dto) {
         //向课程基本信息表保存信息
-        CourseBase courseBaseNew = saveCourseBase(companyId, dto);
+        CourseBase courseBaseNew=new CourseBase();
+        BeanUtils.copyProperties(dto,courseBaseNew);
+        //机构id
+        courseBaseNew.setCompanyId(companyId);
+        courseBaseNew = courseBaseService.saveCourseBase(courseBaseNew);
+        //向课程营销表保存信息
         Long courseId=courseBaseNew.getId();
-        CourseMarket courseMarketNew= saveCourseMarket(dto, courseId);
-        CourseBaseInfoDto courseBaseInfoDto=new CourseBaseInfoDto();
-        BeanUtils.copyProperties(courseMarketNew,courseBaseInfoDto);
-        BeanUtils.copyProperties(courseBaseNew,courseBaseInfoDto);
+        CourseMarket courseMarketNew=new CourseMarket();
+        BeanUtils.copyProperties(dto,courseMarketNew);
+        courseMarketNew.setId(courseId);
+        courseMarketNew=courseBaseService.saveCourseMarket(courseMarketNew);
         //还需要从course_category表中获取大小分类的名称
         String[] mt_st= getMtAndStName(dto.getMt(),dto.getSt());
-        courseBaseInfoDto.setMtName(mt_st[0]);
-        courseBaseInfoDto.setStName(mt_st[1]);
-        //查询课程基本信息及营销信息并返回
+        //封装数据
+        CourseBaseInfoDto courseBaseInfoDto = copyToCourseBaseInfo(courseBaseNew, courseMarketNew, mt_st);
         return courseBaseInfoDto;
     }
+
+    @Override
+    public CourseBaseInfoDto getCourseBaseById(Long courseId) {
+        //查询课程信息
+        CourseBase courseBase=courseBaseMapper.selectById(courseId);
+        if(courseBase==null){
+            return null;
+        }
+        //查询课程营销信息
+        CourseMarket courseMarket=courseMarketMapper.selectById(courseId);
+        //查询大小分类名称
+        String[] mt_st = getMtAndStName(courseBase.getMt(), courseBase.getSt());
+        //封装信息
+        CourseBaseInfoDto courseBaseInfoDto=copyToCourseBaseInfo(courseBase,courseMarket,mt_st);
+        return courseBaseInfoDto;
+    }
+
+    @Override
+    @Transactional
+    public CourseBaseInfoDto updateCourseBaseInfo(Long companyId, EditCourseDto dto) {
+        Long courseId=dto.getId();
+        CourseBase courseBase=courseBaseMapper.selectById(courseId);
+        if(courseBase==null){
+            LearningdogException.cast("课程不存在");
+        }
+        //校验本机构只能修改本机构的课程
+        if(!courseBase.getCompanyId().equals(companyId)){
+            LearningdogException.cast("本机构只能修改本机构的课程");
+        }
+        //更新课程基本信息
+        LocalDateTime createDate = courseBase.getCreateDate();
+        BeanUtils.copyProperties(dto,courseBase);
+        courseBase.setCreateDate(createDate);
+        courseBase.setChangeDate(LocalDateTime.now());
+        int update=courseBaseMapper.updateById(courseBase);
+        if(update<=0){
+            LearningdogException.cast("课程信息更新失败");
+        }
+        //更新课程营销信息
+        CourseMarket courseMarket=new CourseMarket();
+        BeanUtils.copyProperties(dto,courseMarket);
+        courseMarket=courseBaseService.saveCourseMarket(courseMarket);
+        //查询课程大小分类名称
+        String[] mt_st = getMtAndStName(courseBase.getMt(), courseBase.getSt());
+        //封装返回信息
+        CourseBaseInfoDto courseBaseInfoDto = copyToCourseBaseInfo(courseBase, courseMarket,mt_st);
+        return courseBaseInfoDto;
+    }
+
+    /**
+     * @param courseBase:
+     * @param courseMarket:
+     * @param mt_st:
+     * @return CourseBaseInfoDto
+     * @author getjiajia
+     * @description 封装CourseBaseInfoDto数据
+     */
+    private CourseBaseInfoDto copyToCourseBaseInfo(CourseBase courseBase, CourseMarket courseMarket,String[] mt_st) {
+        CourseBaseInfoDto courseBaseInfoDto=new CourseBaseInfoDto();
+        if (courseBase!=null){
+            BeanUtils.copyProperties(courseBase,courseBaseInfoDto);
+        }
+        if (courseMarket!=null){
+            BeanUtils.copyProperties(courseMarket,courseBaseInfoDto);
+        }
+        if (mt_st!=null){
+            courseBaseInfoDto.setMtName(mt_st[0]);
+            courseBaseInfoDto.setStName(mt_st[1]);
+        }
+        return courseBaseInfoDto;
+    }
+
     /**
      * @param mt:
      * @param st:
@@ -101,26 +178,18 @@ public class CourseBaseServiceImpl extends ServiceImpl<CourseBaseMapper, CourseB
         return mt_st;
     }
 
-    /**
-     * @param dto:
-     * @param courseId:
-     * @return CourseMarket
-     * @author getjiajia
-     * @description 根据课程id新增或修改课程营销信息
-     */
+    @Override
     @Transactional
-    public CourseMarket saveCourseMarket(AddCourseDto dto, Long courseId) {
+    public CourseMarket saveCourseMarket(CourseMarket courseMarketNew) {
+        Long courseId = courseMarketNew.getId();
         //向课程营销表保存课程营销信息
-        String charge= dto.getCharge();
+        String charge= courseMarketNew.getCharge();
         //合法性校验
         if(CoursePay.CHARGE.equals(charge)){
-            if(dto.getPrice()==null|| dto.getPrice().floatValue()<=0){
+            if(courseMarketNew.getPrice()==null|| courseMarketNew.getPrice().floatValue()<=0){
                 LearningdogException.cast("课程为收费价格不能为空且必须大于0");
             }
         }
-        CourseMarket courseMarketNew=new CourseMarket();
-        BeanUtils.copyProperties(dto,courseMarketNew);
-        courseMarketNew.setId(courseId);
         //查询是否否存在营销记录
         CourseMarket courseMarket = courseMarketMapper.selectById(courseId);
         //如果不存在
@@ -140,26 +209,14 @@ public class CourseBaseServiceImpl extends ServiceImpl<CourseBaseMapper, CourseB
         return courseMarketNew;
     }
 
-    /**
-     * @param companyId:
-     * @param dto:
-     * @return CourseBase
-     * @author getjiajia
-     * @description 保存课程基本信息
-     */
+    @Override
     @Transactional
-    public CourseBase saveCourseBase(Long companyId, AddCourseDto dto) {
+    public CourseBase saveCourseBase(CourseBase courseBaseNew) {
 
-        //新增对象
-        CourseBase courseBaseNew=new CourseBase();
-        //将填写的课程信息赋值给新增对象
-        BeanUtils.copyProperties(dto,courseBaseNew);
         //设置审核状态
         courseBaseNew.setAuditStatus(CourseAuditStatus.UN_SUBMITTED);
         //设置发布状态
         courseBaseNew.setStatus(CoursePublishStatus.UNPUBLISHED);
-        //机构id
-        courseBaseNew.setCompanyId(companyId);
         //添加时间
         courseBaseNew.setCreateDate(LocalDateTime.now());
         //插入课程信息表
