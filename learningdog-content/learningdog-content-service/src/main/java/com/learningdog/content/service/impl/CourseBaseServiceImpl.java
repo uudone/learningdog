@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.learningdog.base.code.CourseAuditStatus;
 import com.learningdog.base.code.CoursePay;
 import com.learningdog.base.code.CoursePublishStatus;
+import com.learningdog.base.exception.LearningdogException;
 import com.learningdog.base.model.PageParams;
 import com.learningdog.base.model.PageResult;
 import com.learningdog.content.mapper.CourseBaseMapper;
@@ -87,8 +88,8 @@ public class CourseBaseServiceImpl extends ServiceImpl<CourseBaseMapper, CourseB
         return courseBaseInfoDto;
     }
     /**
-     * @param mt: String[0]
-     * @param st: String[1]
+     * @param mt:
+     * @param st:
      * @return String[2]
      * @author getjiajia
      * @description 根据大小分类id获取大小分类名称
@@ -99,7 +100,7 @@ public class CourseBaseServiceImpl extends ServiceImpl<CourseBaseMapper, CourseB
         }
 
         if (StringUtils.isBlank(st)) {
-            throw new RuntimeException("课程分类为空");
+            LearningdogException.cast("课程分类为空");
         }
         CourseCategory courseCategoryByMt=courseCategoryMapper.selectById(mt);
         CourseCategory courseCategoryBySt=courseCategoryMapper.selectById(st);
@@ -120,11 +121,11 @@ public class CourseBaseServiceImpl extends ServiceImpl<CourseBaseMapper, CourseB
         //合法性校验
         String charge= dto.getCharge();
         if(StringUtils.isBlank(charge)){
-            throw new RuntimeException("收费规则没有选择");
+            LearningdogException.cast("收费规则没有选择");
         }
         if(CoursePay.CHARGE.equals(charge)){
             if(dto.getPrice()==null|| dto.getPrice().floatValue()<=0){
-                throw new RuntimeException("课程为收费价格不能为空且必须大于0");
+                LearningdogException.cast("课程为收费价格不能为空且必须大于0");
             }
         }
         CourseMarket courseMarketNew=new CourseMarket();
@@ -137,13 +138,13 @@ public class CourseBaseServiceImpl extends ServiceImpl<CourseBaseMapper, CourseB
             //新增营销记录
             int insert=courseMarketMapper.insert(courseMarketNew);
             if(insert<=0){
-                throw new RuntimeException("保存课程营销信息失败");
+                LearningdogException.cast("保存课程营销信息失败");
             }
         }else {
             //修改营销记录
             int update=courseMarketMapper.updateById(courseMarketNew);
             if (update<=0){
-                throw new RuntimeException("修改课程营销信息失败");
+                LearningdogException.cast("修改课程营销信息失败");
             }
         }
         return courseMarketNew;
@@ -160,23 +161,23 @@ public class CourseBaseServiceImpl extends ServiceImpl<CourseBaseMapper, CourseB
     public CourseBase saveCourseBase(Long companyId, AddCourseDto dto) {
         //合法性校验
         if (StringUtils.isBlank(dto.getName())) {
-            throw new RuntimeException("课程名称为空");
+            LearningdogException.cast("课程名称为空");
         }
 
         if (StringUtils.isBlank(dto.getGrade())) {
-            throw new RuntimeException("课程等级为空");
+            LearningdogException.cast("课程等级为空");
         }
 
         if (StringUtils.isBlank(dto.getTeachmode())) {
-            throw new RuntimeException("教育模式为空");
+            LearningdogException.cast("教育模式为空");
         }
 
         if (StringUtils.isBlank(dto.getUsers())) {
-            throw new RuntimeException("适应人群为空");
+            LearningdogException.cast("适应人群为空");
         }
 
         if (StringUtils.isBlank(dto.getCharge())) {
-            throw new RuntimeException("收费规则为空");
+            LearningdogException.cast("收费规则为空");
         }
         //新增对象
         CourseBase courseBaseNew=new CourseBase();
@@ -193,7 +194,7 @@ public class CourseBaseServiceImpl extends ServiceImpl<CourseBaseMapper, CourseB
         //插入课程信息表
         int insert=courseBaseMapper.insert(courseBaseNew);
         if (insert<0){
-            throw new RuntimeException("新增课程基本信息失败");
+            LearningdogException.cast("新增课程基本信息失败");
         }
         return courseBaseNew;
     }
