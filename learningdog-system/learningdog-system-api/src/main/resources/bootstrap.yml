@@ -1,21 +1,27 @@
-server:
-  servlet:
-    context-path: /system
-  port: 63110
 spring:
   application:
     name: system-api
-  datasource:
-    druid:
-      driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://47.113.228.251:3306/lg_system?serverTimezone=UTC&userUnicode=true&useSSL=false&
-      username: root
-      password: 123456
-logging:
-  config: classpath:log4j2-dev.xml
-swagger:
-  title: "学习汪系统管理"
-  description: "系统管理接口"
-  base-package: com.learningdog.system
-  enabled: true
-  version: 1.0.0
+  cloud:
+    nacos:
+      server-addr: localhost:8848
+      discovery:
+        namespace: dev
+        group: learningdog-project
+      config:
+        namespace: dev
+        group: learningdog-project
+        file-extension: yaml
+        refresh-enabled: true
+        extension-configs:
+          - data-id: system-service-${spring.profiles.active}.yaml
+            group: learningdog-project
+            refresh: true
+        shared-configs:
+          - data-id: logging-${spring.profiles.active}.yaml
+            group: learningdog-common
+            refresh: true
+          - data-id: swagger-${spring.profiles.active}.yaml
+            group: learningdog-common
+            refresh: true
+  profiles:
+    active: dev

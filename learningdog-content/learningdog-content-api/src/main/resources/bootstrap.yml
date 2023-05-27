@@ -1,22 +1,27 @@
-server:
-  servlet:
-    context-path: /content
-  port: 63040
-
 spring:
   application:
     name: content-api
-  datasource:
-    druid:
-      driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://47.113.228.251:3306/lg_content?serverTimezone=UTC&userUnicode=true&useSSL=false
-      username: root
-      password: 123456
-logging:
-  config: classpath:log4j2-dev.xml
-swagger:
-  title: "学习汪内容管理系统"
-  description: "内容系统管理系统对课程相关信息进行管理"
-  base-package: com.learningdog.content
-  enabled: true
-  version: 1.0.0
+  cloud:
+    nacos:
+      server-addr: localhost:8848
+      discovery:
+        namespace: dev
+        group: learningdog-project
+      config:
+        namespace: dev
+        group: learningdog-project
+        file-extension: yaml
+        refresh-enabled: true
+        extension-configs:
+          - data-id: content-service-${spring.profiles.active}.yaml
+            group: learningdog-project
+            refresh: true
+        shared-configs:
+          - data-id: logging-${spring.profiles.active}.yaml
+            group: learningdog-common
+            refresh: true
+          - data-id: swagger-${spring.profiles.active}.yaml
+            group: learningdog-common
+            refresh: true
+  profiles:
+    active: dev

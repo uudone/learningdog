@@ -110,7 +110,7 @@ Content-Type: application/json
 
 {
   "courseId": 22,
-  "teacherName": "王老师3",
+  "teacherName": "王老师1",
   "position": "教师职位",
   "introduction": "教师简介"
 }
