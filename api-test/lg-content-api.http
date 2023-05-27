@@ -114,3 +114,6 @@ Content-Type: application/json
   "position": "教师职位",
   "introduction": "教师简介"
 }
+
+### 删除课程信息
+DELETE {{content_host}}/content/course/40
