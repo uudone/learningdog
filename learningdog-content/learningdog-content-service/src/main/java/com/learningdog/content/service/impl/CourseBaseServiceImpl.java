@@ -9,16 +9,12 @@ import com.learningdog.base.code.CoursePublishStatus;
 import com.learningdog.base.exception.LearningdogException;
 import com.learningdog.base.model.PageParams;
 import com.learningdog.base.model.PageResult;
-import com.learningdog.content.mapper.CourseBaseMapper;
-import com.learningdog.content.mapper.CourseCategoryMapper;
-import com.learningdog.content.mapper.CourseMarketMapper;
+import com.learningdog.content.mapper.*;
 import com.learningdog.content.model.dto.AddCourseDto;
 import com.learningdog.content.model.dto.CourseBaseInfoDto;
 import com.learningdog.content.model.dto.EditCourseDto;
 import com.learningdog.content.model.dto.QueryCourseParamsDto;
-import com.learningdog.content.model.po.CourseBase;
-import com.learningdog.content.model.po.CourseCategory;
-import com.learningdog.content.model.po.CourseMarket;
+import com.learningdog.content.model.po.*;
 import com.learningdog.content.service.CourseBaseService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -48,6 +44,10 @@ public class CourseBaseServiceImpl extends ServiceImpl<CourseBaseMapper, CourseB
     CourseMarketMapper courseMarketMapper;
     @Resource
     CourseCategoryMapper courseCategoryMapper;
+    @Resource
+    CourseTeacherMapper courseTeacherMapper;
+    @Resource
+    TeachplanMapper teachplanMapper;
 
     @Override
     public PageResult<CourseBase> queryCourseBaseList(PageParams pageParams, QueryCourseParamsDto queryCourseParamsDto) {
@@ -225,5 +225,38 @@ public class CourseBaseServiceImpl extends ServiceImpl<CourseBaseMapper, CourseB
             LearningdogException.cast("新增课程基本信息失败");
         }
         return courseBaseNew;
+    }
+
+    @Override
+    @Transactional
+    public void deleteCourse(Long companyId,Long courseId) {
+        //查询课程信息是否存在
+        CourseBase courseBase=courseBaseMapper.selectById(courseId);
+        if (courseBase==null){
+            LearningdogException.cast("课程信息不存在");
+        }
+        //本机构只能删除本机构的课程
+        if (!courseBase.getCompanyId().equals(companyId)){
+            LearningdogException.cast("本机构只能删除本机构的课程");
+        }
+        //课程的审核状态为未提交时方可删除
+        if (!courseBase.getAuditStatus().equals(CourseAuditStatus.UN_SUBMITTED)){
+            LearningdogException.cast("课程的审核状态为未提交时方可删除");
+        }
+        //删除课程基本信息
+        int delete=courseBaseMapper.deleteById(courseId);
+        if (delete<=0){
+            LearningdogException.cast("删除课程信息失败");
+        }
+        //删除课程营销信息
+        courseMarketMapper.deleteById(courseId);
+        //删除课程计划信息
+        LambdaQueryWrapper<Teachplan> teachplanQuery=new LambdaQueryWrapper<>();
+        teachplanQuery.eq(Teachplan::getCourseId,courseId);
+        teachplanMapper.delete(teachplanQuery);
+        //删除课程教师信息
+        LambdaQueryWrapper<CourseTeacher> teacherQuery=new LambdaQueryWrapper<>();
+        teacherQuery.eq(CourseTeacher::getCourseId,courseId);
+        courseTeacherMapper.delete(teacherQuery);
     }
 }

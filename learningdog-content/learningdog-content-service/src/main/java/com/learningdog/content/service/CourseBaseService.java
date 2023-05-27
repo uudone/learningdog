@@ -69,4 +69,13 @@ public interface CourseBaseService extends IService<CourseBase> {
      * @description 保存课程基本信息
      */
     CourseBase saveCourseBase(CourseBase courseBaseNew);
+
+    /**
+     * @param companyId:
+     * @param courseId:
+     * @return void
+     * @author getjiajia
+     * @description 删除课程基本信息、课程营销信息、课程计划、课程计划关联信息、课程师资
+     */
+    void deleteCourse(Long companyId,Long courseId);
 }

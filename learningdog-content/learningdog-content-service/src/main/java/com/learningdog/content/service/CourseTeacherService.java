@@ -16,7 +16,8 @@ import java.util.List;
  */
 public interface CourseTeacherService extends IService<CourseTeacher> {
     /**
-     * @param editCourseTeacherDto
+     * @param companyId:
+     * @param editCourseTeacherDto:
      * @return CourseTeacher
      * @author getjiajia
      * @description 新增课程教师信息
@@ -32,6 +33,7 @@ public interface CourseTeacherService extends IService<CourseTeacher> {
     List<CourseTeacher> getCourseTeachers(Long courseId);
 
     /**
+     * @param companyId:
      * @param editCourseTeacherDto:
      * @return CourseTeacher
      * @author getjiajia
@@ -40,6 +42,7 @@ public interface CourseTeacherService extends IService<CourseTeacher> {
     CourseTeacher updateTeacher(Long companyId,EditCourseTeacherDto editCourseTeacherDto);
 
     /**
+     * @param companyId:
      * @param courseId:
      * @param teacherId:
      * @return void
