@@ -1,10 +1,8 @@
-package com.learningdog.media.controller;
+package com.learningdog.media.api;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.learningdog.media.service.MqMessageHistoryService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import com.learningdog.media.service.MediaProcessService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -17,9 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 @Slf4j
 @RestController
-@RequestMapping("mqMessageHistory")
-public class MqMessageHistoryController {
+@RequestMapping("mediaProcess")
+public class MediaProcessController {
 
     @Autowired
-    private MqMessageHistoryService  mqMessageHistoryService;
+    private MediaProcessService  mediaProcessService;
 }
