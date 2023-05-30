@@ -1,0 +1,12 @@
+### 查询所有文件信息
+POST {{media_host}}/media/files
+
+### 上传文件
+POST {{media_host}}/media/upload/coursefile
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="filedata"; filename="2.png"
+Content-Type: application/octet-stream
+
+< C:\Users\LIJIAHAO\Pictures\pic\2.png
