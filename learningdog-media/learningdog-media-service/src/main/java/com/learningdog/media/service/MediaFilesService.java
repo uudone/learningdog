@@ -8,8 +8,12 @@ import com.learningdog.media.model.dto.QueryMediaParamsDto;
 import com.learningdog.media.model.dto.UploadFileParamsDto;
 import com.learningdog.media.model.dto.UploadFileResultDto;
 import com.learningdog.media.model.po.MediaFiles;
+import com.learningdog.media.model.po.MediaProcess;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.util.List;
 
 /**
  * <p>
@@ -42,6 +46,18 @@ public interface MediaFilesService extends IService<MediaFiles> {
      */
     UploadFileResultDto uploadFile(Long companyId, UploadFileParamsDto paramsDto,String localFilePath);
 
+
+    /**
+     * @param localFilePath:
+     * @param bucket:
+     * @param mimeType:
+     * @param objectName:
+     * @return boolean
+     * @author getjiajia
+     * @description 上传文件到minio
+     */
+    public boolean addMediaFileToMinio(String localFilePath,String bucket,String mimeType,String objectName);
+
     /**
      * @param companyId:
      * @param md5:
@@ -53,6 +69,16 @@ public interface MediaFilesService extends IService<MediaFiles> {
      * @description 将文件信息保存到数据库
      */
     MediaFiles addMediaFileToDb(Long companyId,String md5,UploadFileParamsDto paramsDto,String bucket,String objectName);
+
+
+    /**
+     * @param bucket:
+     * @param objectName:
+     * @return File
+     * @author getjiajia
+     * @description 从minio中下载文件
+     */
+    public File downloadFileFromMinio(String bucket, String objectName);
 
     /**
      * @param fileMd5:
@@ -91,5 +117,10 @@ public interface MediaFilesService extends IService<MediaFiles> {
      * @description 合并文件分块
      */
     RestResponse mergechunks(Long companyId,String fileMd5,int chunkTotal,UploadFileParamsDto paramsDto);
+
+
+
+
+
 
 }

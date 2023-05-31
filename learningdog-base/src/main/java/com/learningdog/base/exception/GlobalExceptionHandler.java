@@ -47,7 +47,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public RestErrorResponse otherException(Exception e){
-        log.error("【系统异常】{}",e.getMessage(),e);
+        if (e!=null){
+            log.error("【系统异常】{}",e);
+        }else {
+            log.error("【系统异常】{}",e.getMessage(),e);
+        }
         return new RestErrorResponse(CommonError.UNKNOWN_ERROR.getErrorMessage());
     }
 }

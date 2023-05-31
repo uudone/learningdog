@@ -40,6 +40,8 @@
         </logger>
         <logger name="org.mybatis" level="INFO">
         </logger>
+        <logger name="com.alibaba.nacos" level="INFO">
+        </logger>
         <logger name="cn.itcast.wanxinp2p.consumer.mapper" level="DEBUG">
         </logger>
 

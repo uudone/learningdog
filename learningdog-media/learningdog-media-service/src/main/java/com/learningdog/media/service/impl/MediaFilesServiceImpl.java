@@ -11,13 +11,14 @@ import com.learningdog.base.model.PageParams;
 import com.learningdog.base.model.PageResult;
 import com.learningdog.base.model.RestResponse;
 import com.learningdog.media.mapper.MediaFilesMapper;
+import com.learningdog.media.mapper.MediaProcessMapper;
 import com.learningdog.media.model.dto.QueryMediaParamsDto;
 import com.learningdog.media.model.dto.UploadFileParamsDto;
 import com.learningdog.media.model.dto.UploadFileResultDto;
 import com.learningdog.media.model.po.MediaFiles;
+import com.learningdog.media.model.po.MediaProcess;
 import com.learningdog.media.service.MediaFilesService;
 import io.minio.*;
-import io.minio.errors.*;
 import io.minio.messages.DeleteError;
 import io.minio.messages.DeleteObject;
 import lombok.extern.slf4j.Slf4j;
@@ -29,12 +30,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.*;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -57,6 +55,9 @@ public class MediaFilesServiceImpl extends ServiceImpl<MediaFilesMapper, MediaFi
     MediaFilesService mediaFilesService;
     @Resource
     MediaFilesMapper mediaFilesMapper;
+    @Resource
+    MediaProcessMapper mediaProcessMapper;
+
     @Value("${minio.bucket.files}")
     private String bucket_files;
 
@@ -169,17 +170,8 @@ public class MediaFilesServiceImpl extends ServiceImpl<MediaFilesMapper, MediaFi
         return mimeType;
     }
 
-
-    /**
-     * @param localFilePath:
-     * @param bucket:
-     * @param mimeType:
-     * @param objectName:
-     * @return boolean
-     * @author getjiajia
-     * @description 上传文件到minio
-     */
-    private boolean addMediaFileToMinio(String localFilePath,String bucket,String mimeType,String objectName){
+    @Override
+    public boolean addMediaFileToMinio(String localFilePath,String bucket,String mimeType,String objectName){
         try{
             UploadObjectArgs args=UploadObjectArgs.builder()
                     .bucket(bucket)
@@ -215,6 +207,10 @@ public class MediaFilesServiceImpl extends ServiceImpl<MediaFilesMapper, MediaFi
             if (insert<=0){
                 LearningdogException.cast("保存文件信息到数据库失败");
             }
+            log.debug("保存文件信息到数据库成功,fileMd5:{}",md5);
+            //将文件信息插入待处理任务表
+            addWaitingTask(mediaFiles);
+
         }
         return mediaFiles;
     }
@@ -307,6 +303,7 @@ public class MediaFilesServiceImpl extends ServiceImpl<MediaFilesMapper, MediaFi
                 .build();
         try {
             minioClient.composeObject(composeObjectArgs);
+            log.debug("合并文件成功,fileMd5:{}",fileMd5);
         } catch (Exception e){
             log.debug("合并文件失败,fileMd5:{},异常:{}",fileMd5,e.getMessage());
             return RestResponse.validFail(false,"合并文件分块失败");
@@ -324,6 +321,7 @@ public class MediaFilesServiceImpl extends ServiceImpl<MediaFilesMapper, MediaFi
                 return RestResponse.validFail(false,"文件合并校验失败，最终上传失败。");
             }
             paramsDto.setFileSize(minioFile.length());
+            log.debug("校验文件成功,fileMd5:{}",fileMd5);
         }catch (Exception e){
             log.debug("校验文件失败,fileMd5:{},异常:{}",fileMd5,e.getMessage());
             return RestResponse.validFail(false,"文件合并校验失败，最终上传失败。");
@@ -336,19 +334,13 @@ public class MediaFilesServiceImpl extends ServiceImpl<MediaFilesMapper, MediaFi
         mediaFilesService.addMediaFileToDb(companyId,fileMd5,paramsDto,bucket_video,mergeFilePath);
         //清除分块文件
         clearChunkFiles(chunkFileFolderPath,chunkTotal);
-
         return RestResponse.success(true);
     }
 
 
-    /**
-     * @param bucket:
-     * @param objectName:
-     * @return File
-     * @author getjiajia
-     * @description 从minio中下载文件
-     */
-    private File downloadFileFromMinio(String bucket,String objectName){
+
+    @Override
+    public File downloadFileFromMinio(String bucket,String objectName){
         File minioFile= null;
         InputStream inputStream=null;
         OutputStream outputStream=null;
@@ -434,5 +426,32 @@ public class MediaFilesServiceImpl extends ServiceImpl<MediaFilesMapper, MediaFi
                     }
                 }
         );
+        log.debug("清除文件分块{}成功",chunkFileFolderPath);
+    }
+
+    /**
+     * @param mediaFiles:
+     * @return void
+     * @author getjiajia
+     * @description 添加待处理任务
+     */
+    private void addWaitingTask(MediaFiles mediaFiles){
+        //获取文件扩展名
+        String extension=mediaFiles.getFilename().substring(mediaFiles.getFilename().lastIndexOf("."));
+        //获取文件类型
+        String mimeType=getFileMimeType(extension);
+        //如果是avi或flv类型视频加入到视频待处理表
+        if("video/x-msvideo".equals(mimeType)||"video/x-flv".equals(mimeType)){
+            MediaProcess mediaProcess=new MediaProcess();
+            BeanUtils.copyProperties(mediaFiles,mediaProcess);
+            mediaProcess.setStatus("1");
+            mediaProcess.setFailCount(0);
+            mediaProcess.setCreateDate(LocalDateTime.now());
+            int insert = mediaProcessMapper.insert(mediaProcess);
+            if (insert<=0){
+                LearningdogException.cast("将待处理文件信息插入到数据库中失败");
+            }
+            log.debug("将待处理文件信息插入到数据库中成功：{}",mediaProcess.getFilePath());
+        }
     }
 }
