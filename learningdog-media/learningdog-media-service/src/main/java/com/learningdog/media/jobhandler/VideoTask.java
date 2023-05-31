@@ -35,6 +35,13 @@ public class VideoTask {
     MediaProcessService mediaProcessService;
     @Value("${videoprocess.ffmpegpath}")
     String ffmpegpath;
+
+    /**
+     * @param :
+     * @return void
+     * @author getjiajia
+     * @description 定时被调度处理视频转码任务，视频统一转为mp4格式
+     */
     @XxlJob("videoJobHandler")
     public void videoJobHandler() throws InterruptedException {
         int shardIndex= XxlJobHelper.getShardIndex();
@@ -127,6 +134,18 @@ public class VideoTask {
 
     private String getFilePath(String fileMd5,String fileExt){
         return   fileMd5.substring(0,1) + "/" + fileMd5.substring(1,2) + "/" + fileMd5 + "/" +fileMd5 +fileExt;
+    }
+
+    /**
+     * @param :
+     * @return void
+     * @author getjiajia
+     * @description 处理任务表中正在运行的超时任务
+     */
+    @XxlJob("processTimeoutJob")
+    public void processTimeoutJob(){
+        int count= mediaProcessService.updateProcessTimeoutJob();
+        log.debug("任务表中有{}个超时运行的任务被处理",count);
     }
 
 }

@@ -356,20 +356,21 @@ public class MediaFilesServiceImpl extends ServiceImpl<MediaFilesMapper, MediaFi
             outputStream=new FileOutputStream(minioFile);
             IOUtils.copy(inputStream,outputStream);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            log.info("下载待处理文件失败,bucket:{},objectName:{}", bucket,objectName);
+            return null;
         }  finally {
             if (inputStream!=null){
                 try {
                     inputStream.close();
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    log.info("未能关闭输入流:minioClient.getObject");
                 }
             }
             if (outputStream!=null){
                 try {
                     outputStream.close();
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    log.info("未能关闭输出流:FileOutputStream(minioFile)");
                 }
             }
         }

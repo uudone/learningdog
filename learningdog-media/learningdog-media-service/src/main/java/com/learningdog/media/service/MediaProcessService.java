@@ -46,4 +46,12 @@ public interface MediaProcessService extends IService<MediaProcess> {
      * @description 保存任务结果
      */
     void saveProcessFinishStatus(Long taskId,String status,String fileId,String url,String errorMsg);
+
+    /**
+     * @param :
+     * @return int
+     * @author getjiajia
+     * @description 处理任务表中超时的任务
+     */
+    int updateProcessTimeoutJob();
 }

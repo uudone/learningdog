@@ -45,7 +45,7 @@ public class MediaProcessServiceImpl extends ServiceImpl<MediaProcessMapper, Med
 
     @Override
     public boolean startTask(long id) {
-        return mediaProcessMapper.startTask(id)>0;
+        return mediaProcessMapper.startTask(id,LocalDateTime.now())>0;
     }
 
 
@@ -86,6 +86,11 @@ public class MediaProcessServiceImpl extends ServiceImpl<MediaProcessMapper, Med
         mediaProcessHistoryMapper.insert(mediaProcessHistory);
         //删除任务记录表中的信息
         mediaProcessMapper.deleteById(taskId);
+    }
+
+    @Override
+    public int updateProcessTimeoutJob() {
+        return mediaProcessMapper.setProcessTimeout(60*30,LocalDateTime.now());
     }
 
 }
