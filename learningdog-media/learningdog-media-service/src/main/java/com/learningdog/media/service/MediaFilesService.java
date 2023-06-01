@@ -7,13 +7,9 @@ import com.learningdog.base.model.RestResponse;
 import com.learningdog.media.model.dto.QueryMediaParamsDto;
 import com.learningdog.media.model.dto.UploadFileParamsDto;
 import com.learningdog.media.model.dto.UploadFileResultDto;
-import com.learningdog.media.model.po.MediaFiles;
-import com.learningdog.media.model.po.MediaProcess;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
+import com.learningdog.media.po.MediaFiles;
 
 import java.io.File;
-import java.util.List;
 
 /**
  * <p>
@@ -128,6 +124,20 @@ public interface MediaFilesService extends IService<MediaFiles> {
      */
     int setFileStatus(String fileId,String status);
 
+    /**
+     * @param companyId:
+     * @param mediaFilesId:
+     * @return MediaFiles
+     * @author getjiajia
+     * @description 获取媒资文件信息
+     */
+    MediaFiles getMediaFiles(Long companyId, String mediaFilesId);
 
-
+    /**
+     * @param mediaId:
+     * @return MediaFiles
+     * @author getjiajia
+     * @description 获取媒资文件信息
+     */
+    MediaFiles getMediaFiles(String mediaId);
 }

@@ -1,6 +1,6 @@
 package com.learningdog.system.api;
 
-import com.learningdog.system.model.po.Dictionary;
+import com.learningdog.system.po.Dictionary;
 import com.learningdog.system.service.DictionaryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;

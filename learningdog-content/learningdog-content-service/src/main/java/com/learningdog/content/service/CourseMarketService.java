@@ -1,7 +1,7 @@
 package com.learningdog.content.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.learningdog.content.model.po.CourseMarket;
+import com.learningdog.content.po.CourseMarket;
 
 /**
  * <p>

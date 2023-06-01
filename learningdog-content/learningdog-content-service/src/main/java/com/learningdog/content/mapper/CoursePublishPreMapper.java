@@ -1,7 +1,7 @@
 package com.learningdog.content.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.learningdog.content.model.po.CoursePublishPre;
+import com.learningdog.content.po.CoursePublishPre;
 
 /**
  * <p>

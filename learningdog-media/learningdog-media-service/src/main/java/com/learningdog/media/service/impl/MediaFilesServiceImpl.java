@@ -16,8 +16,8 @@ import com.learningdog.media.mapper.MediaProcessMapper;
 import com.learningdog.media.model.dto.QueryMediaParamsDto;
 import com.learningdog.media.model.dto.UploadFileParamsDto;
 import com.learningdog.media.model.dto.UploadFileResultDto;
-import com.learningdog.media.model.po.MediaFiles;
-import com.learningdog.media.model.po.MediaProcess;
+import com.learningdog.media.po.MediaFiles;
+import com.learningdog.media.po.MediaProcess;
 import com.learningdog.media.service.MediaFilesService;
 import io.minio.*;
 import io.minio.messages.DeleteError;
@@ -349,6 +349,20 @@ public class MediaFilesServiceImpl extends ServiceImpl<MediaFilesMapper, MediaFi
         updateWrapper.eq(MediaFiles::getId,fileId);
         updateWrapper.set(MediaFiles::getStatus,status);
         return mediaFilesMapper.update(null,updateWrapper);
+    }
+
+    @Override
+    public MediaFiles getMediaFiles(Long companyId, String mediaFilesId) {
+        LambdaQueryWrapper<MediaFiles> queryWrapper=new LambdaQueryWrapper<>();
+        queryWrapper.eq(MediaFiles::getId,mediaFilesId);
+        queryWrapper.eq(MediaFiles::getCompanyId,companyId);
+        return mediaFilesMapper.selectOne(queryWrapper);
+    }
+
+    @Override
+    public MediaFiles getMediaFiles(String mediaId) {
+        return mediaFilesMapper.selectOne(new LambdaQueryWrapper<MediaFiles>()
+                .eq(MediaFiles::getId,mediaId));
     }
 
 

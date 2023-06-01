@@ -3,7 +3,7 @@ package com.learningdog.content.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.learningdog.content.model.dto.SaveTeachplanDto;
 import com.learningdog.content.model.dto.TeachplanTreeDto;
-import com.learningdog.content.model.po.Teachplan;
+import com.learningdog.content.po.Teachplan;
 
 import java.util.List;
 

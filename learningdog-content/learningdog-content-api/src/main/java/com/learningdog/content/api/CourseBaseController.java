@@ -1,13 +1,12 @@
 package com.learningdog.content.api;
 
-import com.learningdog.base.exception.ValidationGroups;
 import com.learningdog.base.model.PageParams;
 import com.learningdog.base.model.PageResult;
 import com.learningdog.content.model.dto.AddCourseDto;
 import com.learningdog.content.model.dto.CourseBaseInfoDto;
 import com.learningdog.content.model.dto.EditCourseDto;
 import com.learningdog.content.model.dto.QueryCourseParamsDto;
-import com.learningdog.content.model.po.CourseBase;
+import com.learningdog.content.po.CourseBase;
 import com.learningdog.content.service.CourseBaseService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;

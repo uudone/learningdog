@@ -1,7 +1,7 @@
 package com.learningdog.media.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.learningdog.media.model.po.MediaProcess;
+import com.learningdog.media.po.MediaProcess;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;

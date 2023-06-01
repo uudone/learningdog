@@ -1,7 +1,7 @@
 package com.learningdog.media.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.learningdog.media.model.po.MediaProcessHistory;
+import com.learningdog.media.po.MediaProcessHistory;
 
 /**
  * <p>

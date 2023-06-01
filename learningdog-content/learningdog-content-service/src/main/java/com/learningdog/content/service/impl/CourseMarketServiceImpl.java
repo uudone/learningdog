@@ -2,7 +2,7 @@ package com.learningdog.content.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.learningdog.content.mapper.CourseMarketMapper;
-import com.learningdog.content.model.po.CourseMarket;
+import com.learningdog.content.po.CourseMarket;
 import com.learningdog.content.service.CourseMarketService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

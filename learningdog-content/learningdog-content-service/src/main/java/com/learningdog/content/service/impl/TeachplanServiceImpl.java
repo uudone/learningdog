@@ -7,7 +7,7 @@ import com.learningdog.base.exception.LearningdogException;
 import com.learningdog.content.mapper.TeachplanMapper;
 import com.learningdog.content.model.dto.SaveTeachplanDto;
 import com.learningdog.content.model.dto.TeachplanTreeDto;
-import com.learningdog.content.model.po.Teachplan;
+import com.learningdog.content.po.Teachplan;
 import com.learningdog.content.service.TeachplanService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;

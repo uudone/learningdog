@@ -1,7 +1,8 @@
 package com.learningdog.content.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.learningdog.content.model.po.CoursePublishPre;
+import com.learningdog.content.model.dto.CoursePreviewDto;
+import com.learningdog.content.po.CoursePublishPre;
 
 /**
  * <p>
@@ -13,4 +14,11 @@ import com.learningdog.content.model.po.CoursePublishPre;
  */
 public interface CoursePublishPreService extends IService<CoursePublishPre> {
 
+    /**
+     * @param courseId:
+     * @return CoursePreviewDto
+     * @author getjiajia
+     * @description 获取课程预览信息
+     */
+    CoursePreviewDto getCoursePreviewInfo(Long courseId);
 }

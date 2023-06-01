@@ -12,5 +12,6 @@ spring:
         group: learningdog-project
         file-extension: yaml
         refresh-enabled: true
+
   profiles:
     active: dev

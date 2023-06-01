@@ -1,7 +1,7 @@
 package com.learningdog.media.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.learningdog.media.model.po.MediaProcess;
+import com.learningdog.media.po.MediaProcess;
 
 import java.util.List;
 

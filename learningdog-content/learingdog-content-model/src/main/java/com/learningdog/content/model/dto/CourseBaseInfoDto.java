@@ -1,6 +1,6 @@
 package com.learningdog.content.model.dto;
 
-import com.learningdog.content.model.po.CourseBase;
+import com.learningdog.content.po.CourseBase;
 import lombok.Data;
 
 /**

@@ -13,6 +13,14 @@
     <artifactId>learningdog-base</artifactId>
 
     <dependencies>
+
+        <!--远程调用feign依赖-->
+        <dependency>
+            <groupId>com.learningdog</groupId>
+            <artifactId>learningdog-feign-api</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>

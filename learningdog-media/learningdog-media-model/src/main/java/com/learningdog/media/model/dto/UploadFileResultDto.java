@@ -1,6 +1,6 @@
 package com.learningdog.media.model.dto;
 
-import com.learningdog.media.model.po.MediaFiles;
+import com.learningdog.media.po.MediaFiles;
 
 /**
  * @author: getjiajia

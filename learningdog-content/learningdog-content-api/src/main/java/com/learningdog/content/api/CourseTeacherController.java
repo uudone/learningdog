@@ -1,8 +1,7 @@
 package com.learningdog.content.api;
 
-import com.learningdog.content.model.dto.AddCourseTeacherDto;
 import com.learningdog.content.model.dto.EditCourseTeacherDto;
-import com.learningdog.content.model.po.CourseTeacher;
+import com.learningdog.content.po.CourseTeacher;
 import com.learningdog.content.service.CourseTeacherService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

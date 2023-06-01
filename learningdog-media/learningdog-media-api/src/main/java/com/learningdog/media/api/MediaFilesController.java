@@ -7,13 +7,11 @@ import com.learningdog.base.model.RestResponse;
 import com.learningdog.media.model.dto.QueryMediaParamsDto;
 import com.learningdog.media.model.dto.UploadFileParamsDto;
 import com.learningdog.media.model.dto.UploadFileResultDto;
-import com.learningdog.media.model.po.MediaFiles;
+import com.learningdog.media.po.MediaFiles;
 import com.learningdog.media.service.MediaFilesService;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -122,6 +120,14 @@ public class MediaFilesController {
         paramsDto.setRemark("");
         paramsDto.setFilename(fileName);
         return mediaFilesService.mergechunks(companyId,fileMd5,chunkTotal,paramsDto);
+    }
+
+    @ApiOperation("根据id查询媒资文件信息")
+    @GetMapping("/files/{mediaFilesId}")
+    public MediaFiles getMediaFiles(@PathVariable("mediaFilesId")String mediaFilesId){
+        //todo:机构id，由于认证系统没有上线暂时硬编码
+        Long companyId = 1232141425L;
+        return mediaFilesService.getMediaFiles(companyId,mediaFilesId);
     }
 
 }

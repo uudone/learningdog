@@ -1,7 +1,7 @@
 package com.learningdog.media.jobhandler;
 
 import com.learningdog.base.utils.Mp4VideoUtil;
-import com.learningdog.media.model.po.MediaProcess;
+import com.learningdog.media.po.MediaProcess;
 import com.learningdog.media.service.MediaFilesService;
 import com.learningdog.media.service.MediaProcessService;
 import com.xxl.job.core.context.XxlJobHelper;

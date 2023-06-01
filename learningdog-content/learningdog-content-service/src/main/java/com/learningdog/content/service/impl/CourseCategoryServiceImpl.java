@@ -3,7 +3,7 @@ package com.learningdog.content.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.learningdog.content.mapper.CourseCategoryMapper;
 import com.learningdog.content.model.dto.CourseCategoryTreeDto;
-import com.learningdog.content.model.po.CourseCategory;
+import com.learningdog.content.po.CourseCategory;
 import com.learningdog.content.service.CourseCategoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

@@ -3,7 +3,7 @@
 <mapper namespace="com.learningdog.content.mapper.CourseCategoryMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.learningdog.content.model.po.CourseCategory">
+    <resultMap id="BaseResultMap" type="com.learningdog.content.po.CourseCategory">
         <id column="id" property="id" />
         <result column="name" property="name" />
         <result column="label" property="label" />

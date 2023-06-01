@@ -5,11 +5,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.learningdog.base.model.PageParams;
 import com.learningdog.base.model.PageResult;
 import com.learningdog.content.model.dto.QueryCourseParamsDto;
-import com.learningdog.content.model.po.CourseBase;
+import com.learningdog.content.po.CourseBase;
 import org.apache.commons.lang.StringUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.annotation.Resource;

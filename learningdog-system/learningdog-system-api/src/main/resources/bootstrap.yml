@@ -7,6 +7,7 @@ spring:
       discovery:
         namespace: dev
         group: learningdog-project
+        cluster-name: GD
       config:
         namespace: dev
         group: learningdog-project
@@ -21,6 +22,9 @@ spring:
             group: learningdog-common
             refresh: true
           - data-id: swagger-${spring.profiles.active}.yaml
+            group: learningdog-common
+            refresh: true
+          - data-id: feign-api-${spring.profiles.active}.yaml
             group: learningdog-common
             refresh: true
   profiles:

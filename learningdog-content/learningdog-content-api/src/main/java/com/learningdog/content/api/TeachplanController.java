@@ -1,8 +1,11 @@
 package com.learningdog.content.api;
 
+import com.learningdog.content.model.dto.BindTeachplanMediaDto;
 import com.learningdog.content.model.dto.SaveTeachplanDto;
 import com.learningdog.content.model.dto.TeachplanTreeDto;
+import com.learningdog.content.service.TeachplanMediaService;
 import com.learningdog.content.service.TeachplanService;
+import com.learningdog.media.po.MediaFiles;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -29,6 +32,9 @@ public class TeachplanController {
 
     @Resource
     private TeachplanService  teachplanService;
+
+    @Resource
+    TeachplanMediaService teachplanMediaService;
 
     @ApiOperation("查询课程计划树形结构")
     @GetMapping("/{courseId}/tree-nodes")
@@ -60,5 +66,19 @@ public class TeachplanController {
     public void deleteTeachplan(@PathVariable("teachplanId")Long teachplanId){
         teachplanService.deleteTeachplanById(teachplanId);
     }
+
+    @ApiOperation("课程计划和媒资信息绑定")
+    @PostMapping("/association/media")
+    public void associationMedia(@RequestBody @Validated BindTeachplanMediaDto bindTeachplanMediaDto){
+        teachplanMediaService.associationMedia(bindTeachplanMediaDto);
+    }
+
+    @ApiOperation("删除课程计划和媒资信息的绑定信息")
+    @DeleteMapping("/association/media/{teachplanId}/{mediaId}")
+    public void deleteAssociationMedia(@PathVariable("teachplanId")Long teachplanId,
+                                       @PathVariable("mediaId")String mediaId){
+        teachplanMediaService.deleteAssociationMedia(teachplanId,mediaId);
+    }
+
 
 }

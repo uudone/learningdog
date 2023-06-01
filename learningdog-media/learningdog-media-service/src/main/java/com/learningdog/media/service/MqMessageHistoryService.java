@@ -1,7 +1,7 @@
 package com.learningdog.media.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.learningdog.media.model.po.MqMessageHistory;
+import com.learningdog.media.po.MqMessageHistory;
 
 /**
  * <p>

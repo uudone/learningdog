@@ -2,7 +2,7 @@ package com.learningdog.content.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.learningdog.content.model.dto.TeachplanTreeDto;
-import com.learningdog.content.model.po.Teachplan;
+import com.learningdog.content.po.Teachplan;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

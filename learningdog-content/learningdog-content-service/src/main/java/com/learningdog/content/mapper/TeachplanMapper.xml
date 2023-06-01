@@ -3,7 +3,7 @@
 <mapper namespace="com.learningdog.content.mapper.TeachplanMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.learningdog.content.model.po.Teachplan">
+    <resultMap id="BaseResultMap" type="com.learningdog.content.po.Teachplan">
         <id column="id" property="id" />
         <result column="pname" property="pname" />
         <result column="parentid" property="parentid" />
@@ -52,7 +52,7 @@
             <result column="two_orderby"   property="orderby" />
             <result column="two_courseId"   property="courseId" />
             <result column="two_coursePubId"   property="coursePubId" />
-            <association property="teachplanMedia" javaType="com.learningdog.content.model.po.TeachplanMedia">
+            <association property="teachplanMedia" javaType="com.learningdog.content.po.TeachplanMedia">
                 <result column="teachplanMeidaId"   property="id" />
                 <result column="mediaFilename"   property="mediaFilename" />
                 <result column="mediaId"   property="mediaId" />
@@ -105,7 +105,7 @@
                        limit 1
     </select>
 
-    <select id="selectNextTeachplan" resultType="com.learningdog.content.model.po.Teachplan">
+    <select id="selectNextTeachplan" resultType="com.learningdog.content.po.Teachplan">
         select * from teachplan
                  where parentid=#{parentId}
                    and course_id=#{courseId}
@@ -114,7 +114,7 @@
                  limit 1
     </select>
 
-    <select id="selectPreTeachplan" resultType="com.learningdog.content.model.po.Teachplan">
+    <select id="selectPreTeachplan" resultType="com.learningdog.content.po.Teachplan">
         select * from teachplan
         where parentid=#{parentId}
           and course_id=#{courseId}

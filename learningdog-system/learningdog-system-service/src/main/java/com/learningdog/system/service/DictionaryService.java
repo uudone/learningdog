@@ -1,7 +1,7 @@
 package com.learningdog.system.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.learningdog.system.model.po.Dictionary;
+import com.learningdog.system.po.Dictionary;
 
 import java.util.List;
 

@@ -1,6 +1,6 @@
 package com.learningdog.content.model.dto;
 
-import com.learningdog.content.model.po.CourseCategory;
+import com.learningdog.content.po.CourseCategory;
 import lombok.Data;
 import lombok.ToString;
 

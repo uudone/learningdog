@@ -14,7 +14,7 @@ import com.learningdog.content.model.dto.AddCourseDto;
 import com.learningdog.content.model.dto.CourseBaseInfoDto;
 import com.learningdog.content.model.dto.EditCourseDto;
 import com.learningdog.content.model.dto.QueryCourseParamsDto;
-import com.learningdog.content.model.po.*;
+import com.learningdog.content.po.*;
 import com.learningdog.content.service.CourseBaseService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;

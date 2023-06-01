@@ -2,7 +2,7 @@ package com.learningdog.content.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.learningdog.content.model.dto.CourseCategoryTreeDto;
-import com.learningdog.content.model.po.CourseCategory;
+import com.learningdog.content.po.CourseCategory;
 
 import java.util.List;
 

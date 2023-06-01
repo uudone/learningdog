@@ -1,9 +1,8 @@
 package com.learningdog.content.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.learningdog.content.model.dto.AddCourseTeacherDto;
 import com.learningdog.content.model.dto.EditCourseTeacherDto;
-import com.learningdog.content.model.po.CourseTeacher;
+import com.learningdog.content.po.CourseTeacher;
 
 import java.util.List;
 

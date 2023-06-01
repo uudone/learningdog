@@ -10,3 +10,7 @@ Content-Disposition: form-data; name="filedata"; filename="2.png"
 Content-Type: application/octet-stream
 
 < C:\Users\LIJIAHAO\Pictures\pic\2.png
+
+
+### 根据id查询媒资文件信息
+GET {{media_host}}/media/files/18886fa8a3036ec27fe619e5309c02a2

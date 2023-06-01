@@ -1,7 +1,7 @@
 package com.learningdog.content.model.dto;
 
-import com.learningdog.content.model.po.Teachplan;
-import com.learningdog.content.model.po.TeachplanMedia;
+import com.learningdog.content.po.Teachplan;
+import com.learningdog.content.po.TeachplanMedia;
 import lombok.Data;
 
 import java.util.List;

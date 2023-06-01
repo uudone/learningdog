@@ -1,7 +1,7 @@
 package com.learningdog.system.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.learningdog.system.model.po.Dictionary;
+import com.learningdog.system.po.Dictionary;
 
 /**
  * <p>

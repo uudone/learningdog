@@ -2,7 +2,7 @@ package com.learningdog.content.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.learningdog.content.model.dto.CourseCategoryTreeDto;
-import com.learningdog.content.model.po.CourseCategory;
+import com.learningdog.content.po.CourseCategory;
 
 import java.util.List;
 

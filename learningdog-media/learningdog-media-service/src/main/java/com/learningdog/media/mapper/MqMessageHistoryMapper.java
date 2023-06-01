@@ -1,8 +1,7 @@
 package com.learningdog.media.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.learningdog.media.model.po.MqMessageHistory;
-import org.apache.ibatis.annotations.Param;
+import com.learningdog.media.po.MqMessageHistory;
 
 /**
  * <p>
