@@ -119,7 +119,14 @@ public interface MediaFilesService extends IService<MediaFiles> {
     RestResponse mergechunks(Long companyId,String fileMd5,int chunkTotal,UploadFileParamsDto paramsDto);
 
 
-
+    /**
+     * @param fileId:
+     * @param status:
+     * @return int
+     * @author getjiajia
+     * @description 设置文件状态
+     */
+    int setFileStatus(String fileId,String status);
 
 
 

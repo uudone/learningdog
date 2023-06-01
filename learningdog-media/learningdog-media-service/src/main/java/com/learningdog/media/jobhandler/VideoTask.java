@@ -64,6 +64,7 @@ public class VideoTask {
                 File originFile=null;
                 try{
                     long taskId=mediaProcess.getId();
+                    //争抢锁
                     boolean flag= mediaProcessService.startTask(taskId);
                     if (!flag){
                         return;
@@ -73,6 +74,8 @@ public class VideoTask {
                     String filePath=mediaProcess.getFilePath();
                     String fileId=mediaProcess.getFileId();
                     String filename=mediaProcess.getFilename();
+                    //将文件状态设置为处理中
+                    mediaFilesService.setFileStatus(fileId,"4");
                     //将要处理的文件下载到本地
                     originFile=mediaFilesService.downloadFileFromMinio(bucket,filePath);
                     if (originFile==null){

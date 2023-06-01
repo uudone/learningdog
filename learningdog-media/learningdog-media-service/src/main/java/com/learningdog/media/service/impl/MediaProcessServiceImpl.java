@@ -10,6 +10,7 @@ import com.learningdog.media.model.po.MediaProcess;
 import com.learningdog.media.model.po.MediaProcessHistory;
 import com.learningdog.media.service.MediaProcessService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -76,6 +77,13 @@ public class MediaProcessServiceImpl extends ServiceImpl<MediaProcessMapper, Med
         }
         //更新媒资文件信息
         mediaFiles.setUrl(url);
+        if (StringUtils.isEmpty(errorMsg)){
+            //处理成功
+            mediaFiles.setStatus("2");
+        }else {
+            //处理失败
+            mediaFiles.setStatus("3");
+        }
         mediaFilesMapper.updateById(mediaFiles);
         //插入历史任务信息表
         mediaProcess.setUrl(url);

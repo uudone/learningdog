@@ -1,6 +1,7 @@
 package com.learningdog.media.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.j256.simplemagic.ContentInfo;
@@ -118,6 +119,11 @@ public class MediaFilesServiceImpl extends ServiceImpl<MediaFilesMapper, MediaFi
         //封装返回数据
         UploadFileResultDto resultDto=new UploadFileResultDto();
         BeanUtils.copyProperties(mediaFiles,resultDto);
+        //更新文件状态
+        int update = mediaFilesService.setFileStatus(mediaFiles.getId(),"2");
+        if (update<=0){
+            LearningdogException.cast("更新文件状态失败");
+        }
         return resultDto;
     }
 
@@ -210,7 +216,6 @@ public class MediaFilesServiceImpl extends ServiceImpl<MediaFilesMapper, MediaFi
             log.debug("保存文件信息到数据库成功,fileMd5:{}",md5);
             //将文件信息插入待处理任务表
             addWaitingTask(mediaFiles);
-
         }
         return mediaFiles;
     }
@@ -337,6 +342,14 @@ public class MediaFilesServiceImpl extends ServiceImpl<MediaFilesMapper, MediaFi
         return RestResponse.success(true);
     }
 
+    @Override
+    @Transactional
+    public int setFileStatus(String fileId,String status) {
+        LambdaUpdateWrapper<MediaFiles> updateWrapper=new LambdaUpdateWrapper<>();
+        updateWrapper.eq(MediaFiles::getId,fileId);
+        updateWrapper.set(MediaFiles::getStatus,status);
+        return mediaFilesMapper.update(null,updateWrapper);
+    }
 
 
     @Override
