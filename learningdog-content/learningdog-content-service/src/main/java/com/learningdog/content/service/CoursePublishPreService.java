@@ -21,4 +21,13 @@ public interface CoursePublishPreService extends IService<CoursePublishPre> {
      * @description 获取课程预览信息
      */
     CoursePreviewDto getCoursePreviewInfo(Long courseId);
+
+    /**
+     * @param companyId:
+     * @param courseId:
+     * @return void
+     * @author getjiajia
+     * @description 提交课程审核
+     */
+    void commitAudit(Long companyId,Long courseId);
 }

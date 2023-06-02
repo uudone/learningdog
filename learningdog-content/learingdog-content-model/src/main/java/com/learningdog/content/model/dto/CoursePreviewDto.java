@@ -1,5 +1,6 @@
 package com.learningdog.content.model.dto;
 
+import com.learningdog.content.po.CourseTeacher;
 import lombok.Data;
 
 import java.util.List;
@@ -15,5 +16,7 @@ public class CoursePreviewDto {
     private CourseBaseInfoDto courseBase;
     //课程计划信息
     private List<TeachplanTreeDto> teachplans;
+    //课程教师信息
+    private List<CourseTeacher> teachers;
 
 }

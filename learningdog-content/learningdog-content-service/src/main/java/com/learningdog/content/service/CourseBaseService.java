@@ -78,4 +78,13 @@ public interface CourseBaseService extends IService<CourseBase> {
      * @description 删除课程基本信息、课程营销信息、课程计划、课程计划关联信息、课程师资
      */
     void deleteCourse(Long companyId,Long courseId);
+
+    /**
+     * @param courseId:
+     * @param auditStatus:
+     * @return void
+     * @author getjiajia
+     * @description 更新课程审核信息
+     */
+    void updateAuditStatus(Long courseId, String auditStatus);
 }

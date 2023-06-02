@@ -1,6 +1,8 @@
 package com.learningdog.content.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.learningdog.base.code.CourseAuditStatus;
@@ -258,5 +260,15 @@ public class CourseBaseServiceImpl extends ServiceImpl<CourseBaseMapper, CourseB
         LambdaQueryWrapper<CourseTeacher> teacherQuery=new LambdaQueryWrapper<>();
         teacherQuery.eq(CourseTeacher::getCourseId,courseId);
         courseTeacherMapper.delete(teacherQuery);
+    }
+
+    @Override
+    public void updateAuditStatus(Long courseId, String auditStatus) {
+        int update=courseBaseMapper.update(null,new LambdaUpdateWrapper<CourseBase>()
+                .eq(CourseBase::getId,courseId)
+                .set(CourseBase::getAuditStatus,auditStatus));
+        if (update<=0){
+            LearningdogException.cast("更新课程状态失败");
+        }
     }
 }

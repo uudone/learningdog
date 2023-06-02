@@ -120,3 +120,6 @@ DELETE {{content_host}}/content/course/40
 
 ### 从网关获取课程教师信息
 GET {{gateway_host}}/content/courseTeacher/list/22
+
+### 提交课程审核
+POST {{gateway_host}}/content/courseaudit/commit/75
