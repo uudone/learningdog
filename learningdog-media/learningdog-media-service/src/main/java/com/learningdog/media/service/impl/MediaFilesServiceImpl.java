@@ -91,7 +91,7 @@ public class MediaFilesServiceImpl extends ServiceImpl<MediaFilesMapper, MediaFi
     }
 
     @Override
-    public UploadFileResultDto uploadFile(Long companyId, UploadFileParamsDto paramsDto, String localFilePath) {
+    public UploadFileResultDto uploadFile(Long companyId, UploadFileParamsDto paramsDto, String localFilePath,String objectName) {
         File file=new File(localFilePath);
         if (!file.exists()){
             LearningdogException.cast("文件不存在");
@@ -107,7 +107,11 @@ public class MediaFilesServiceImpl extends ServiceImpl<MediaFilesMapper, MediaFi
         //获取文件在minio中的目录
         String defaultFolderPath = getDefaultFolderPath();
         //获取文件在minio中的对象名
-        String objectName=defaultFolderPath+"/"+md5+extension;
+        if (StringUtils.isEmpty(objectName)){
+            objectName=defaultFolderPath+"/"+md5+extension;
+        }else{
+            objectName="course/"+objectName;
+        }
         //将文件上传到minio
         boolean flag=addMediaFileToMinio(localFilePath,bucket_files,mimeType,objectName);
         if (!flag){

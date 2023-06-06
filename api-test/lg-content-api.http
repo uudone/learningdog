@@ -123,3 +123,6 @@ GET {{gateway_host}}/content/courseTeacher/list/22
 
 ### 提交课程审核
 POST {{gateway_host}}/content/courseaudit/commit/75
+
+### 课程发布
+POST {{gateway_host}}/content/coursepublish/122

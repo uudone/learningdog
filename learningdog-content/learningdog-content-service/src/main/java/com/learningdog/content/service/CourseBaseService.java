@@ -87,4 +87,13 @@ public interface CourseBaseService extends IService<CourseBase> {
      * @description 更新课程审核信息
      */
     void updateAuditStatus(Long courseId, String auditStatus);
+
+    /**
+     * @param courseId:
+     * @param publishStatus:
+     * @return void
+     * @author getjiajia
+     * @description 更新课程发布状态
+     */
+    void updatePublishStatus(Long courseId,String publishStatus);
 }

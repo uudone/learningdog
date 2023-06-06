@@ -40,7 +40,7 @@ public interface MediaFilesService extends IService<MediaFiles> {
      * @author getjiajia
      * @description 上传文件
      */
-    UploadFileResultDto uploadFile(Long companyId, UploadFileParamsDto paramsDto,String localFilePath);
+    UploadFileResultDto uploadFile(Long companyId, UploadFileParamsDto paramsDto,String localFilePath,String objectName);
 
 
     /**

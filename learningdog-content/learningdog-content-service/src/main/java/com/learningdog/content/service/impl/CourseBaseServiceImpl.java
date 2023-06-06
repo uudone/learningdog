@@ -271,4 +271,14 @@ public class CourseBaseServiceImpl extends ServiceImpl<CourseBaseMapper, CourseB
             LearningdogException.cast("更新课程状态失败");
         }
     }
+
+    @Override
+    public void updatePublishStatus(Long courseId, String publishStatus) {
+        int update=courseBaseMapper.update(null,new LambdaUpdateWrapper<CourseBase>()
+                .eq(CourseBase::getId,courseId)
+                .set(CourseBase::getStatus,publishStatus));
+        if (update<=0){
+            LearningdogException.cast("更新课程发布状态失败");
+        }
+    }
 }

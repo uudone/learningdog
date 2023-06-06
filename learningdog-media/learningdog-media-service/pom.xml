@@ -86,8 +86,6 @@
             <artifactId>xxl-job-core</artifactId>
         </dependency>
 
-
-
     </dependencies>
 
 </project>

@@ -1,23 +1,19 @@
-package com.learningdog.content.model.po;
+package com.learningdog.search.po;
 
-import java.time.LocalDateTime;
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableField;
-import java.io.Serializable;
+import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-import com.baomidou.mybatisplus.annotation.TableName;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
- * <p>
- * 课程发布
- * </p>
- *
- * @author getjiajia
+ * @author: getjiajia
+ * @description: 课程索引信息
+ * @version: 1.0
  */
 @Data
-@TableName("course_publish")
-public class CoursePublish implements Serializable {
-
+public class CourseIndex implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
@@ -50,10 +46,6 @@ public class CoursePublish implements Serializable {
      */
     private String tags;
 
-    /**
-     * 创建人
-     */
-    private String username;
 
     /**
      * 大分类
@@ -75,6 +67,8 @@ public class CoursePublish implements Serializable {
      */
     private String stName;
 
+
+
     /**
      * 课程等级
      */
@@ -84,7 +78,6 @@ public class CoursePublish implements Serializable {
      * 教育模式
      */
     private String teachmode;
-
     /**
      * 课程图片
      */
@@ -95,39 +88,16 @@ public class CoursePublish implements Serializable {
      */
     private String description;
 
-    /**
-     * 课程营销信息，json格式
-     */
-    private String market;
-
-    /**
-     * 所有课程计划，json格式
-     */
-    private String teachplan;
-
-    /**
-     * 教师信息，json格式
-     */
-    private String teachers;
 
     /**
      * 发布时间
      */
-    @TableField(fill = FieldFill.INSERT)
+    @JSONField(format="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createDate;
 
     /**
-     * 上架时间
-     */
-    private LocalDateTime onlineDate;
-
-    /**
-     * 下架时间
-     */
-    private LocalDateTime offlineDate;
-
-    /**
-     * 发布状态
+     * 状态
      */
     private String status;
 
@@ -145,7 +115,6 @@ public class CoursePublish implements Serializable {
      * 现价
      */
     private Float price;
-
     /**
      * 原价
      */

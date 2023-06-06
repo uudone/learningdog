@@ -12,6 +12,7 @@ import com.learningdog.media.service.MediaFilesService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -44,15 +45,18 @@ public class MediaFilesController {
     }
 
     @ApiOperation(value = "上传文件接口",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @RequestMapping("/upload/coursefile")
+    @RequestMapping(value = "/upload/coursefile",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public UploadFileResultDto uploadFile(@RequestPart("filedata")MultipartFile multipartFile,
                                           @RequestParam(value = "folder",required = false)String folder,
                                           @RequestParam(value = "objectName",required = false)String objectName) throws IOException {
         //todo:机构id，由于认证系统没有上线暂时硬编码
         Long companyId = 1232141425L;
         UploadFileParamsDto paramsDto=new UploadFileParamsDto();
-        paramsDto.setFileSize(multipartFile.getSize());
-        paramsDto.setFileType(ResourcesType.PICTURE);
+        if (StringUtils.isEmpty(objectName)){//如果为空，则是图片类型
+            paramsDto.setFileType(ResourcesType.PICTURE);
+        }else {//不为空则为其他类型
+            paramsDto.setFileType(ResourcesType.OTHER);
+        }
         paramsDto.setFilename(multipartFile.getOriginalFilename());//文件原名称
         //创建临时文件
         File tempFile=null;
@@ -63,7 +67,7 @@ public class MediaFilesController {
             //文件路径
             String absolutePath=tempFile.getAbsolutePath();
             //上传文件
-            resultDto= mediaFilesService.uploadFile(companyId,paramsDto,absolutePath);
+            resultDto= mediaFilesService.uploadFile(companyId,paramsDto,absolutePath,objectName);
         }finally {
             //删除临时文件
             if (tempFile!=null)
