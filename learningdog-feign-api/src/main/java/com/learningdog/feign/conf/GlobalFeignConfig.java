@@ -15,10 +15,5 @@ import org.springframework.context.annotation.Configuration;
 @EnableFeignClients(basePackages = "com.learningdog.feign.client")
 public class GlobalFeignConfig {
 
-    @Bean
-    public MediaClientFallbackFactory mediaClientFallbackFactory(){
-        return new MediaClientFallbackFactory();
-    }
-
 
 }

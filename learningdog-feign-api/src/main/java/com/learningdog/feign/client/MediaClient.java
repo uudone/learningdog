@@ -28,4 +28,10 @@ public interface MediaClient {
     public String uploadFile(@RequestPart("filedata") MultipartFile multipartFile,
                                           @RequestParam(value = "folder",required = false)String folder,
                                           @RequestParam(value = "objectName",required = false)String objectName);
+
+    @DeleteMapping("/{fileMd5}")
+    public void deleteMediaFile(@PathVariable("fileMd5")String fileMd5);
+
+    @DeleteMapping("/courseHtml")
+    public void deleteCourseHtml(@RequestParam("filePath") String filePath);
 }

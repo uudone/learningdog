@@ -2,7 +2,6 @@ package com.learningdog.content.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.learningdog.base.code.CourseAuditStatus;
@@ -18,6 +17,7 @@ import com.learningdog.content.model.dto.EditCourseDto;
 import com.learningdog.content.model.dto.QueryCourseParamsDto;
 import com.learningdog.content.po.*;
 import com.learningdog.content.service.CourseBaseService;
+import com.learningdog.feign.client.MediaClient;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -50,6 +50,12 @@ public class CourseBaseServiceImpl extends ServiceImpl<CourseBaseMapper, CourseB
     CourseTeacherMapper courseTeacherMapper;
     @Resource
     TeachplanMapper teachplanMapper;
+    @Resource
+    CoursePublishMapper coursePublishMapper;
+    @Resource
+    TeachplanMediaMapper teachplanMediaMapper;
+    @Resource
+    MediaClient mediaClient;
 
     @Override
     public PageResult<CourseBase> queryCourseBaseList(PageParams pageParams, QueryCourseParamsDto queryCourseParamsDto) {
@@ -256,10 +262,17 @@ public class CourseBaseServiceImpl extends ServiceImpl<CourseBaseMapper, CourseB
         LambdaQueryWrapper<Teachplan> teachplanQuery=new LambdaQueryWrapper<>();
         teachplanQuery.eq(Teachplan::getCourseId,courseId);
         teachplanMapper.delete(teachplanQuery);
+        //删除课程计划绑定的媒资信息
+        teachplanMediaMapper.delete(new LambdaQueryWrapper<TeachplanMedia>()
+                .eq(TeachplanMedia::getCourseId,courseId));
         //删除课程教师信息
         LambdaQueryWrapper<CourseTeacher> teacherQuery=new LambdaQueryWrapper<>();
         teacherQuery.eq(CourseTeacher::getCourseId,courseId);
         courseTeacherMapper.delete(teacherQuery);
+        //删除课程发布表中的信息
+        coursePublishMapper.deleteById(courseId);
+        //删除minio中的静态文件html
+        mediaClient.deleteCourseHtml("course/"+courseId+".html");
     }
 
     @Override

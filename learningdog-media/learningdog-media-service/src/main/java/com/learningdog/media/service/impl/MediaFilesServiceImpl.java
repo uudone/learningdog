@@ -108,7 +108,7 @@ public class MediaFilesServiceImpl extends ServiceImpl<MediaFilesMapper, MediaFi
         String defaultFolderPath = getDefaultFolderPath();
         //获取文件在minio中的对象名
         if (StringUtils.isEmpty(objectName)){
-            objectName=defaultFolderPath+"/"+md5+extension;
+            objectName=defaultFolderPath+md5+extension;
         }else{
             objectName="course/"+objectName;
         }
@@ -369,6 +369,51 @@ public class MediaFilesServiceImpl extends ServiceImpl<MediaFilesMapper, MediaFi
                 .eq(MediaFiles::getId,mediaId));
     }
 
+    @Override
+    @Transactional
+    public void deleteMediaFile(Long companyId, String fileMd5) {
+        MediaFiles mediaFiles = mediaFilesMapper.selectById(fileMd5);
+        if (mediaFiles==null){
+            LearningdogException.cast("文件不存在");
+        }
+        if (!companyId.equals(mediaFiles.getCompanyId())){
+            LearningdogException.cast("本机构只能删除本机构的媒资文件");
+        }
+        //删除mediaFile表中的记录
+        int i = mediaFilesMapper.deleteById(fileMd5);
+        if (i<=0){
+            LearningdogException.cast("删除文件失败");
+        }
+        //删除minio中的文件
+        String url = mediaFiles.getUrl().substring(1);
+        String filePath=url.substring(url.indexOf("/")+1);
+        deleteMinioFile(mediaFiles.getBucket(),filePath);
+        if (StringUtils.isNotEmpty(mediaFiles.getFilePath())){
+            deleteMinioFile(mediaFiles.getBucket(),mediaFiles.getFilePath());
+        }
+        log.debug("删除文件成功，fileMd5：{}",fileMd5);
+    }
+
+    @Override
+    public void deleteCourseHtml(Long companyId, String filePath) {
+        MediaFiles mediaFiles=mediaFilesMapper.selectOne(
+                new LambdaQueryWrapper<MediaFiles>()
+                        .eq(MediaFiles::getCompanyId,companyId)
+                        .eq(MediaFiles::getFilePath,filePath));
+        if (mediaFiles==null) {
+            log.debug("删除的课程静态文件不存在，companyId：{}，filePath：{}",companyId,filePath);
+            LearningdogException.cast("删除的课程静态文件不存在");
+        }
+        //删除mediaFile表中的记录
+        int i = mediaFilesMapper.deleteById(mediaFiles.getId());
+        if (i<=0){
+            LearningdogException.cast("删除文件失败");
+        }
+        //删除minio中的文件
+        deleteMinioFile(mediaFiles.getBucket(),filePath);
+        log.debug("删除课程静态文件成功，companyId：{}，filePath：{}",companyId,filePath);
+    }
+
 
     @Override
     public File downloadFileFromMinio(String bucket,String objectName){
@@ -484,6 +529,20 @@ public class MediaFilesServiceImpl extends ServiceImpl<MediaFilesMapper, MediaFi
                 LearningdogException.cast("将待处理文件信息插入到数据库中失败");
             }
             log.debug("将待处理文件信息插入到数据库中成功：{}",mediaProcess.getFilePath());
+        }
+    }
+
+    private void deleteMinioFile(String bucket,String filePath){
+        try {
+            minioClient.removeObject(
+                    RemoveObjectArgs.builder()
+                            .bucket(bucket)
+                            .object(filePath)
+                            .build()
+            );
+        } catch (Exception e) {
+            log.info("删除minio文件失败，文件路径：{}",bucket+"/"+filePath);
+            throw new RuntimeException(e);
         }
     }
 }

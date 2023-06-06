@@ -47,9 +47,11 @@ public class CoursePublishTask extends MessageProcessAbstract {
     public boolean execute(MqMessage mqMessage) {
         //获取消息中业务相关信息
         String businessKey1=mqMessage.getBusinessKey1();
+        String businessKey2 = mqMessage.getBusinessKey2();
         long courseId=Long.parseLong(businessKey1);
+        long companyId=Long.parseLong(businessKey2);
         //课程静态化
-        generateCourseHtml(mqMessage,courseId);
+        generateCourseHtml(mqMessage,courseId,companyId);
         //课程索引
         saveCourseIndex(mqMessage,courseId);
         //课程缓存
@@ -64,7 +66,7 @@ public class CoursePublishTask extends MessageProcessAbstract {
      * @author getjiajia
      * @description 生成课程静态化页面并上传到文件系统
      */
-    public void generateCourseHtml(MqMessage mqMessage,long courseId){
+    public void generateCourseHtml(MqMessage mqMessage,long courseId,long companyId){
         log.debug("开始课程页面静态化，课程id:{}",courseId);
         long messageId=mqMessage.getId();
         int stageOne= mqMessageService.getStageOne(messageId);

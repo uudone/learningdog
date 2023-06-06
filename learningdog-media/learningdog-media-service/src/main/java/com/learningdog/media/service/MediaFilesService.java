@@ -140,4 +140,22 @@ public interface MediaFilesService extends IService<MediaFiles> {
      * @description 获取媒资文件信息
      */
     MediaFiles getMediaFiles(String mediaId);
+
+    /**
+     * @param companyId:
+     * @param fileMd5:
+     * @return void
+     * @author getjiajia
+     * @description 删除媒资文件信息
+     */
+    void deleteMediaFile(Long companyId, String fileMd5);
+
+    /**
+     * @param companyId:
+     * @param filePath:
+     * @return void
+     * @author getjiajia
+     * @description 删除课程静态文件信息
+     */
+    void deleteCourseHtml(Long companyId, String filePath);
 }

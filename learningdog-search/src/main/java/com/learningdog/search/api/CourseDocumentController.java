@@ -54,7 +54,7 @@ public class CourseDocumentController {
         return true;
     }
 
-    @ApiOperation("更新课程文档")
+    @ApiOperation("删除课程文档")
     @DeleteMapping("/course/delete/{id}")
     public Boolean delete(@PathVariable("id")Long id){
         Boolean result=courseDocumentService.deleteCourseDocument(courseIndexStore,String.valueOf(id));

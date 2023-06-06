@@ -1,6 +1,7 @@
 package com.learningdog.content.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.learningdog.base.code.CourseAuditStatus;
 import com.learningdog.base.code.CoursePublishStatus;
@@ -16,6 +17,7 @@ import com.learningdog.content.po.CoursePublishPre;
 import com.learningdog.content.service.CourseBaseService;
 import com.learningdog.content.service.CoursePublishService;
 import com.learningdog.feign.client.MediaClient;
+import com.learningdog.feign.client.SearchClient;
 import com.learningdog.feign.conf.MultipartSupportConfig;
 import com.learningdog.messagesdk.po.MqMessage;
 import com.learningdog.messagesdk.service.MqMessageService;
@@ -62,6 +64,8 @@ public class CoursePublishServiceImpl extends ServiceImpl<CoursePublishMapper, C
     MqMessageService mqMessageService;
     @Resource
     MediaClient mediaClient;
+    @Resource
+    SearchClient searchClient;
 
     @Override
     @Transactional
@@ -102,7 +106,7 @@ public class CoursePublishServiceImpl extends ServiceImpl<CoursePublishMapper, C
         //修改课程基本信息表的发布状态
         courseBaseService.updatePublishStatus(courseId,CoursePublishStatus.PUBLISHED);
         //保存到消息处理表中
-        coursePublishService.saveCoursePublishMessage(courseId);
+        coursePublishService.saveCoursePublishMessage(courseId,companyId);
         //删除预发布课程表中的记录
         int delete = coursePublishPreMapper.deleteById(courseId);
         if (delete<=0){
@@ -114,8 +118,8 @@ public class CoursePublishServiceImpl extends ServiceImpl<CoursePublishMapper, C
 
     @Override
     @Transactional
-    public void saveCoursePublishMessage(Long courseId) {
-        MqMessage mqMessage=mqMessageService.addMessage("course_publish",String.valueOf(courseId),null,null);
+    public void saveCoursePublishMessage(Long courseId,Long companyId) {
+        MqMessage mqMessage=mqMessageService.addMessage("course_publish",String.valueOf(courseId),String.valueOf(companyId),null);
         if (mqMessage==null){
             LearningdogException.cast(CommonError.UNKNOWN_ERROR);
         }
@@ -201,6 +205,37 @@ public class CoursePublishServiceImpl extends ServiceImpl<CoursePublishMapper, C
                 file.delete();
             }
         }
-
     }
+
+    @Override
+    @Transactional
+    public void offline(Long companyId, Long courseId) {
+        //查询课程发布表
+        CoursePublish coursePublish=coursePublishMapper.selectById(courseId);
+        if (coursePublish==null){
+            LearningdogException.cast("该课程未发布");
+        }
+        if(CoursePublishStatus.OFFLINE.equals(coursePublish.getStatus())){
+            LearningdogException.cast("该课程已下线");
+        }
+        //本机构只能下架本机构的课程
+        if (!companyId.equals(coursePublish.getCompanyId())){
+            LearningdogException.cast("本机构只能下架本机构的课程");
+        }
+        //修改课程发布状态为已下线
+        courseBaseService.updatePublishStatus(courseId,CoursePublishStatus.OFFLINE);
+        coursePublishMapper.update(null,new LambdaUpdateWrapper<CoursePublish>()
+                .eq(CoursePublish::getId,courseId)
+                .set(CoursePublish::getStatus,CoursePublishStatus.OFFLINE));
+        //修改课程审核状态为未提交
+        courseBaseService.updateAuditStatus(courseId,CourseAuditStatus.UN_SUBMITTED);
+        //删除es中的索引记录
+        Boolean delete = searchClient.delete(courseId);
+        if (!delete){
+            log.info("删除课程索引记录失败，courseId：{}",courseId);
+            LearningdogException.cast("课程下架失败，请重试");
+        }
+    }
+
+
 }

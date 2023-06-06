@@ -30,7 +30,7 @@ public interface CoursePublishService extends IService<CoursePublish> {
      * @author getjiajia
      * @description 保存消息表记录
      */
-    void saveCoursePublishMessage(Long courseId);
+    void saveCoursePublishMessage(Long courseId,Long companyId);
 
     /**
      * @param courseId:
@@ -47,4 +47,13 @@ public interface CoursePublishService extends IService<CoursePublish> {
      * @description 上传课程静态化页面
      */
     void uploadCourseHtml(long courseId,File file);
+
+    /**
+     * @param companyId:
+     * @param courseId:
+     * @return void
+     * @author getjiajia
+     * @description 课程下线
+     */
+    void offline(Long companyId, Long courseId);
 }

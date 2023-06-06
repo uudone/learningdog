@@ -48,7 +48,7 @@ public class MinioClientTest {
             UploadObjectArgs args=UploadObjectArgs.builder()
                     .bucket("test")
                     .object("/0001/log")//bucket下的子目录
-                    .filename("C:\\file\\logback\\1.txt")//本地文件目录
+                    .filename("C:\\Users\\LIJIAHAO\\Desktop\\file\\logback\\1.txt")//本地文件目录
                     .contentType(mimeType)//默认根据文件扩展名称推断，也可以自己指定
                     .build();
             minioClient.uploadObject(args);

@@ -134,4 +134,20 @@ public class MediaFilesController {
         return mediaFilesService.getMediaFiles(companyId,mediaFilesId);
     }
 
+    @ApiOperation("删除媒资文件信息")
+    @DeleteMapping("/{fileMd5}")
+    public void deleteMediaFile(@PathVariable("fileMd5")String fileMd5){
+        //todo:机构id，由于认证系统没有上线暂时硬编码
+        Long companyId = 1232141425L;
+        mediaFilesService.deleteMediaFile(companyId,fileMd5);
+    }
+
+    @ApiOperation("删除静态课程文件信息")
+    @DeleteMapping("/courseHtml")
+    public void deleteCourseHtml(String filePath){
+        //todo:机构id，由于认证系统没有上线暂时硬编码
+        Long companyId = 1232141425L;
+        mediaFilesService.deleteCourseHtml(companyId,filePath);
+    }
+
 }
