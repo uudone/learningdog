@@ -1,4 +1,4 @@
-package com.learningdog.media.config;
+package com.learningdog.auth.config;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
@@ -9,12 +9,12 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * @author: getjiajia
- * @description: Mybatis-Plus 配置
+ * @description: MybatisPlus配置
  * @version: 1.0
  */
-@MapperScan("com.learningdog.media.mapper")
 @Configuration
-public class MybatisPlusConf {
+@MapperScan("com.learningdog.auth.mapper")
+public class MybatisPlusConfig {
     /**
      * @param :
      * @return MybatisPlusInterceptor

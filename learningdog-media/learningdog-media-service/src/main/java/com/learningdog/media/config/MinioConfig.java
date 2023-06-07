@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @Data
-public class MinioConf {
+public class MinioConfig {
 
     @Value("${minio.endpoint}")
     private String endpoint;

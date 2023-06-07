@@ -1,6 +1,6 @@
 spring:
   application:
-    name: search
+    name: auth-service
   cloud:
     nacos:
       server-addr: localhost:8848
@@ -28,4 +28,3 @@ spring:
             refresh: true
   profiles:
     active: dev
-

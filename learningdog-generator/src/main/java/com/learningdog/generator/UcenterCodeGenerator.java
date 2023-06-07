@@ -16,22 +16,22 @@ import java.util.Arrays;
 public class UcenterCodeGenerator {
 
 	// TODO 修改服务名以及数据表名
-	private static final String SERVICE_NAME = "ucenter";
+	private static final String SERVICE_NAME = "auth";
 
 	//数据库账号
 	private static final String DATA_SOURCE_USER_NAME  = "root";
 	//数据库密码
-	private static final String DATA_SOURCE_PASSWORD  = "mysql";
+	private static final String DATA_SOURCE_PASSWORD  = "123456";
 	//生成的表
 	private static final String[] TABLE_NAMES = new String[]{
-			"xc_company",
-			"xc_company_user",
-			"xc_menu",
-			"xc_permission",
-			"xc_role",
-			"xc_teacher",
-			"xc_user",
-			"xc_user_role"
+			"company",
+			"company_user",
+			"menu",
+			"permission",
+			"role",
+			"teacher",
+			"user",
+			"user_role"
 	};
 
 	// TODO 默认生成entity，需要生成DTO修改此变量
@@ -47,8 +47,8 @@ public class UcenterCodeGenerator {
 		GlobalConfig gc = new GlobalConfig();
 		gc.setFileOverride(true);
 		//生成路径
-		gc.setOutputDir(System.getProperty("user.dir") + "/xuecheng-plus-generator/src/main/java");
-		gc.setAuthor("itcast");
+		gc.setOutputDir(System.getProperty("user.dir") + "/learningdog-generator/src/main/java");
+		gc.setAuthor("getjiajia");
 		gc.setOpen(false);
 		gc.setSwagger2(false);
 		gc.setServiceName("%sService");
@@ -64,7 +64,7 @@ public class UcenterCodeGenerator {
 		// 数据库配置
 		DataSourceConfig dsc = new DataSourceConfig();
 		dsc.setDbType(DbType.MYSQL);
-		dsc.setUrl("jdbc:mysql://192.168.101.65:3306/xcplus_users"
+		dsc.setUrl("jdbc:mysql:///lg_user"
 				+ "?serverTimezone=UTC&useUnicode=true&useSSL=false&characterEncoding=utf8");
 //		dsc.setDriverName("com.mysql.jdbc.Driver");
 		dsc.setDriverName("com.mysql.cj.jdbc.Driver");
@@ -75,11 +75,11 @@ public class UcenterCodeGenerator {
 		// 包配置
 		PackageConfig pc = new PackageConfig();
 		pc.setModuleName(SERVICE_NAME);
-		pc.setParent("com.xuecheng");
+		pc.setParent("com.learningdog");
 
 		pc.setServiceImpl("service.impl");
 		pc.setXml("mapper");
-		pc.setEntity("model.po");
+		pc.setEntity("po");
 		mpg.setPackageInfo(pc);
 
 
