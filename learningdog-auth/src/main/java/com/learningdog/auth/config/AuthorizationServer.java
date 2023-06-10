@@ -29,13 +29,13 @@ public class AuthorizationServer extends AuthorizationServerConfigurerAdapter {
     @Resource
     private AuthenticationManager authenticationManager;
 
-    //客户端详情服务
+    //客户端详情配置
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.inMemory()//使用in-memory存储
                 .withClient("LgWebApp")//client_id
-                .secret("LgWebApp")//客户端密钥
-                //.secret(new BCryptPasswordEncoder().encode("LgWebApp"))//客户端密钥
+                //.secret("LgWebApp")//客户端密钥
+                .secret(new BCryptPasswordEncoder().encode("LgWebApp"))//客户端密钥
                 .resourceIds("learningdog")//资源列表
                 .authorizedGrantTypes("authorization_code",
                         "password",

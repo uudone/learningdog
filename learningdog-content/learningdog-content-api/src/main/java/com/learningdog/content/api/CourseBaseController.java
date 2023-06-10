@@ -8,10 +8,12 @@ import com.learningdog.content.model.dto.EditCourseDto;
 import com.learningdog.content.model.dto.QueryCourseParamsDto;
 import com.learningdog.content.po.CourseBase;
 import com.learningdog.content.service.CourseBaseService;
+import com.learningdog.util.SecurityUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,6 +54,10 @@ public class CourseBaseController {
     @GetMapping("/{courseId}")
     @ApiImplicitParam(value = "courseId",name = "课程Id",required = true,dataType = "Long",paramType = "path")
     public CourseBaseInfoDto getCourseBaseById(@PathVariable("courseId") Long courseId){
+        //取出用户当前身份
+
+        System.out.println(SecurityUtils.getUser());
+
         return courseBaseService.getCourseBaseById(courseId);
     }
 

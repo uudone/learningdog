@@ -2,15 +2,19 @@ package com.learningdog.auth.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+
+import javax.annotation.Resource;
 
 /**
  * @author: getjiajia
@@ -21,6 +25,9 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 @EnableGlobalMethodSecurity(securedEnabled = true,prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Resource
+    DaoAuthenticationProviderCustom daoAuthenticationProviderCustom;
+
     @Bean
     public AuthenticationManager authenticationManager() throws Exception {
         return super.authenticationManager();
@@ -28,18 +35,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     //配置用户信息服务
-    @Bean
-    public UserDetailsService userDetailsService(){
-        //暂时存放到内存中
-        InMemoryUserDetailsManager manager=new InMemoryUserDetailsManager();
-        manager.createUser(User.withUsername("zhangsan").password("123").authorities("p1").build());
-        manager.createUser(User.withUsername("lisi").password("123").authorities("p2").build());
-        return manager;
-    }
+//    @Bean
+//    public UserDetailsService userDetailsService(){
+//        //暂时存放到内存中
+//        InMemoryUserDetailsManager manager=new InMemoryUserDetailsManager();
+//        manager.createUser(User.withUsername("zhangsan").password("123").authorities("p1").build());
+//        manager.createUser(User.withUsername("lisi").password("123").authorities("p2").build());
+//        return manager;
+//    }
 
     @Bean
     public PasswordEncoder passwordEncoder(){
-        return NoOpPasswordEncoder.getInstance();
+//        return NoOpPasswordEncoder.getInstance();
+        return new BCryptPasswordEncoder();
     }
 
     @Override
@@ -51,5 +59,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin().successForwardUrl("/login-success");//登录成功跳转到/login-success
         http.logout().logoutUrl("/logout");//退出地址
 
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(daoAuthenticationProviderCustom);
     }
 }
