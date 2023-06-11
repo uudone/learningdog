@@ -1,7 +1,6 @@
 package com.learningdog.content.api;
 
 import com.learningdog.content.model.dto.CoursePreviewDto;
-import com.learningdog.content.service.CourseBaseService;
 import com.learningdog.content.service.CoursePublishPreService;
 import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,8 +20,7 @@ import javax.annotation.Resource;
 @RequestMapping("/open")
 public class CourseOpenController {
 
-    @Resource
-    CourseBaseService courseBaseService;
+
     @Resource
     CoursePublishPreService coursePublishPreService;
 

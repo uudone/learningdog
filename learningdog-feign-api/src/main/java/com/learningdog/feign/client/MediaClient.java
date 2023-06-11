@@ -27,7 +27,8 @@ public interface MediaClient {
     @RequestMapping(value = "/upload/coursefile",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public String uploadFile(@RequestPart("filedata") MultipartFile multipartFile,
                                           @RequestParam(value = "folder",required = false)String folder,
-                                          @RequestParam(value = "objectName",required = false)String objectName);
+                                          @RequestParam(value = "objectName",required = false)String objectName,
+                                          @RequestHeader(name = "authorization",required = false)String authorization);
 
     @DeleteMapping("/{fileMd5}")
     public void deleteMediaFile(@PathVariable("fileMd5")String fileMd5);

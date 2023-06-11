@@ -9,11 +9,13 @@ import com.learningdog.media.model.dto.UploadFileParamsDto;
 import com.learningdog.media.model.dto.UploadFileResultDto;
 import com.learningdog.media.po.MediaFiles;
 import com.learningdog.media.service.MediaFilesService;
+import com.learningdog.media.util.SecurityUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,8 +41,7 @@ public class MediaFilesController {
     @ApiOperation("媒资列表查询接口")
     @PostMapping("/files")
     public PageResult<MediaFiles> list(PageParams params,@RequestBody QueryMediaParamsDto queryMediaParamsDto){
-        //todo:机构id，由于认证系统没有上线暂时硬编码
-        Long companyId = 1232141425L;
+        Long companyId=SecurityUtils.getCompanyId();
         return mediaFilesService.list(companyId,params,queryMediaParamsDto);
     }
 
@@ -49,8 +50,7 @@ public class MediaFilesController {
     public UploadFileResultDto uploadFile(@RequestPart("filedata")MultipartFile multipartFile,
                                           @RequestParam(value = "folder",required = false)String folder,
                                           @RequestParam(value = "objectName",required = false)String objectName) throws IOException {
-        //todo:机构id，由于认证系统没有上线暂时硬编码
-        Long companyId = 1232141425L;
+        Long companyId=SecurityUtils.getCompanyId();
         UploadFileParamsDto paramsDto=new UploadFileParamsDto();
         if (StringUtils.isEmpty(objectName)){//如果为空，则是图片类型
             paramsDto.setFileType(ResourcesType.PICTURE);
@@ -116,8 +116,7 @@ public class MediaFilesController {
     public RestResponse mergechunks(@RequestParam("fileMd5")String fileMd5,
                                     @RequestParam("fileName")String fileName,
                                     @RequestParam("chunkTotal")Integer chunkTotal){
-        //todo:机构id，由于认证系统没有上线暂时硬编码
-        Long companyId = 1232141425L;
+        Long companyId= SecurityUtils.getCompanyId();
         UploadFileParamsDto paramsDto=new UploadFileParamsDto();
         paramsDto.setFileType(ResourcesType.VIDEO);
         paramsDto.setTags("课程视频");
@@ -129,24 +128,23 @@ public class MediaFilesController {
     @ApiOperation("根据id查询媒资文件信息")
     @GetMapping("/files/{mediaFilesId}")
     public MediaFiles getMediaFiles(@PathVariable("mediaFilesId")String mediaFilesId){
-        //todo:机构id，由于认证系统没有上线暂时硬编码
-        Long companyId = 1232141425L;
+        Long companyId=SecurityUtils.getCompanyId();
         return mediaFilesService.getMediaFiles(companyId,mediaFilesId);
     }
 
     @ApiOperation("删除媒资文件信息")
     @DeleteMapping("/{fileMd5}")
+    @PreAuthorize("hasAuthority('lg_teachmanager_course')")
     public void deleteMediaFile(@PathVariable("fileMd5")String fileMd5){
-        //todo:机构id，由于认证系统没有上线暂时硬编码
-        Long companyId = 1232141425L;
+        Long companyId=SecurityUtils.getCompanyId();
         mediaFilesService.deleteMediaFile(companyId,fileMd5);
     }
 
     @ApiOperation("删除静态课程文件信息")
     @DeleteMapping("/courseHtml")
+    @PreAuthorize("hasAuthority('lg_teachmanager_course')")
     public void deleteCourseHtml(String filePath){
-        //todo:机构id，由于认证系统没有上线暂时硬编码
-        Long companyId = 1232141425L;
+        Long companyId=SecurityUtils.getCompanyId();
         mediaFilesService.deleteCourseHtml(companyId,filePath);
     }
 

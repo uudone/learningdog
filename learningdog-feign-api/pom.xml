@@ -22,6 +22,12 @@
             <groupId>io.github.openfeign</groupId>
             <artifactId>feign-httpclient</artifactId>
         </dependency>
+        <!-- servlet Api 依赖 -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
         <!--feign支持Multipart格式传参-->
         <dependency>

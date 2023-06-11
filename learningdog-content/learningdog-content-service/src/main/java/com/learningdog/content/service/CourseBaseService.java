@@ -21,13 +21,14 @@ import com.learningdog.content.po.CourseMarket;
 public interface CourseBaseService extends IService<CourseBase> {
 
     /**
+     * @param companyId: 机构id
      * @param pageParams: 分页参数
      * @param queryCourseParamsDto: 查询条件
      * @return PageResult<CourseBase>
      * @author getjiajia
      * @description 课程查询接口
      */
-    PageResult<CourseBase> queryCourseBaseList(PageParams pageParams, QueryCourseParamsDto queryCourseParamsDto);
+    PageResult<CourseBase> queryCourseBaseList(Long companyId,PageParams pageParams, QueryCourseParamsDto queryCourseParamsDto);
 
     /**
      * @param companyId: 机构Id

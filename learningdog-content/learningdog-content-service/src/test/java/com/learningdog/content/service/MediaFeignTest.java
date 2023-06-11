@@ -25,6 +25,6 @@ public class MediaFeignTest {
     public void testUploadFile() throws IOException {
         MultipartFile multipartFile= MultipartSupportConfig.getMultipartFile(new File("C:\\Users\\LIJIAHAO\\Desktop\\test.html"));
         String objectName="120.html";
-        mediaClient.uploadFile(multipartFile,null,objectName);
+        mediaClient.uploadFile(multipartFile,null,objectName,"token");
     }
 }

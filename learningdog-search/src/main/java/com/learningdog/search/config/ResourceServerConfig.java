@@ -1,4 +1,4 @@
-package com.learningdog.content.config;
+package com.learningdog.search.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;

@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,36 +46,42 @@ public class TeachplanController {
 
     @ApiOperation("新增或修改课程计划")
     @PostMapping
+    @PreAuthorize("hasAuthority('lg_teachmanager_course_plan')")
     public void saveTeachplan(@RequestBody @Validated SaveTeachplanDto saveTeachplanDto){
         teachplanService.saveTeachplan(saveTeachplanDto);
     }
 
     @ApiOperation("课程计划向下移动")
     @PostMapping("/movedown/{teachplanId}")
+    @PreAuthorize("hasAuthority('lg_teachmanager_course_plan')")
     public void movedownTeachplan(@PathVariable("teachplanId")Long teachplanId){
         teachplanService.movedownTeachplan(teachplanId);
     }
 
     @ApiOperation("课程计划向上移动")
     @PostMapping("/moveup/{teachplanId}")
+    @PreAuthorize("hasAuthority('lg_teachmanager_course_plan')")
     public void moveupTeachplan(@PathVariable("teachplanId")Long teachplanId){
         teachplanService.moveupTeachplan(teachplanId);
     }
 
     @ApiOperation("删除课程计划")
     @DeleteMapping("{teachplanId}")
+    @PreAuthorize("hasAuthority('lg_teachmanager_course_plan')")
     public void deleteTeachplan(@PathVariable("teachplanId")Long teachplanId){
         teachplanService.deleteTeachplanById(teachplanId);
     }
 
     @ApiOperation("课程计划和媒资信息绑定")
     @PostMapping("/association/media")
+    @PreAuthorize("hasAuthority('lg_teachmanager_course_plan')")
     public void associationMedia(@RequestBody @Validated BindTeachplanMediaDto bindTeachplanMediaDto){
         teachplanMediaService.associationMedia(bindTeachplanMediaDto);
     }
 
     @ApiOperation("删除课程计划和媒资信息的绑定信息")
     @DeleteMapping("/association/media/{teachplanId}/{mediaId}")
+    @PreAuthorize("hasAuthority('lg_teachmanager_course_plan')")
     public void deleteAssociationMedia(@PathVariable("teachplanId")Long teachplanId,
                                        @PathVariable("mediaId")String mediaId){
         teachplanMediaService.deleteAssociationMedia(teachplanId,mediaId);

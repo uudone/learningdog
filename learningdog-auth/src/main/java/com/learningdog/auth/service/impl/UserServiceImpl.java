@@ -1,11 +1,12 @@
 package com.learningdog.auth.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.learningdog.auth.mapper.MenuMapper;
 import com.learningdog.auth.mapper.UserMapper;
 import com.learningdog.auth.model.dto.AuthParamsDto;
 import com.learningdog.auth.model.dto.UserExt;
+import com.learningdog.auth.po.Menu;
 import com.learningdog.auth.po.User;
 import com.learningdog.auth.service.AuthService;
 import com.learningdog.auth.service.UserService;
@@ -17,6 +18,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -30,9 +33,10 @@ import javax.annotation.Resource;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService, UserDetailsService {
 
     @Resource
-    UserMapper userMapper;
+    MenuMapper menuMapper;
     @Resource
     ApplicationContext applicationContext;
+
 
     /**
      * @param s: AuthParamsDto类型的json数据
@@ -64,11 +68,24 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * @description 封装用户信息
      */
     public UserDetails getUserPrincipal(UserExt userExt){
-        //用户权限
-        String[] authorities={"p1"};
+        //查询用户权限
+        List<Menu> menus = menuMapper.selectPermissionByUserId(userExt.getId());
+        ArrayList<String> permissions=new ArrayList<>();
+        if (menus==null||menus.size()==0){
+            //用户权限,如果不加则报Cannot pass a null GrantedAuthority collection
+            permissions.add("p1");
+        }else{
+            menus.forEach(menu -> {
+                permissions.add(menu.getCode());
+                    }
+            );
+        }
         String password=userExt.getPassword();
         //排除用户敏感信息
         userExt.setPassword(null);
+        //设置用户权限
+        userExt.setPermissions(permissions);
+        String[] authorities=permissions.toArray(new String[0]);
         String jsonString=JSON.toJSONString(userExt);
         //创建UserDetails对象
         UserDetails userDetails= org.springframework.security.core.userdetails.User

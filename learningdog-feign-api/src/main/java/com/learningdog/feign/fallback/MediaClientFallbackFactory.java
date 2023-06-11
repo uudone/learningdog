@@ -27,8 +27,8 @@ public class MediaClientFallbackFactory implements FallbackFactory<MediaClient> 
             }
 
             @Override
-            public String uploadFile(MultipartFile multipartFile, String folder, String objectName){
-                log.debug("MediaFeign发生熔断走降级方法，方法：uploadFile，参数：multipartFile={},folder={},objectName={}",multipartFile,folder,objectName);
+            public String uploadFile(MultipartFile multipartFile, String folder, String objectName,String token){
+                log.debug("MediaFeign发生熔断走降级方法，方法：uploadFile，参数：multipartFile={},folder={},objectName={},token={}",multipartFile,folder,objectName,token);
                 return null;
             }
 

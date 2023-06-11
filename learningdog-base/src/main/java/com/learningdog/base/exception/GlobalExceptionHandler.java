@@ -43,15 +43,23 @@ public class GlobalExceptionHandler {
         return new RestErrorResponse(errMessage);
     }
 
+
     @ResponseBody
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public RestErrorResponse otherException(Exception e){
-        if (e!=null){
+        if (e==null){
             log.error("【系统异常】{}",e);
         }else {
             log.error("【系统异常】{}",e.getMessage(),e);
+            //org.springframework.security.access.AccessDeniedException: 不允许访问
+            if(e.getMessage().equals("不允许访问")){
+                return new RestErrorResponse("没有操作此功能的权限");
+            }
         }
         return new RestErrorResponse(CommonError.UNKNOWN_ERROR.getErrorMessage());
     }
+
+
+
 }

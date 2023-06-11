@@ -8,7 +8,9 @@ import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
 import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.http.HttpCookie;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
@@ -67,9 +69,10 @@ public class GatewayAuthFilter implements GlobalFilter, Ordered {
                 return chain.filter(exchange);
             }
         }
-
         //检查token是否存在
-        String token = getToken(exchange);
+        ServerWebExchange[] exchanges={exchange};//用于记录exchange
+        String token = getToken(exchanges);
+        exchange=exchanges[0];
         if (StringUtils.isBlank(token)) {
             return buildReturnMono("没有认证",exchange);
         }
@@ -93,16 +96,29 @@ public class GatewayAuthFilter implements GlobalFilter, Ordered {
     /**
      * 获取token
      */
-    private String getToken(ServerWebExchange exchange) {
+    private String getToken(ServerWebExchange[] exchanges) {
+        ServerWebExchange exchange=exchanges[0];
+        //从请求头中获取
         String tokenStr = exchange.getRequest().getHeaders().getFirst("Authorization");
-        if (StringUtils.isBlank(tokenStr)) {
-            return null;
+        if (!StringUtils.isBlank(tokenStr)) {
+            String token = tokenStr.split(" ")[1];
+            if (!StringUtils.isBlank(token)) {
+                return token;
+            }
         }
-        String token = tokenStr.split(" ")[1];
-        if (StringUtils.isBlank(token)) {
-            return null;
+        //从cookies中获取
+        HttpCookie jwt = exchange.getRequest().getCookies().getFirst("jwt");
+        if (jwt != null) {
+            String value = jwt.getValue();
+            if (!StringUtils.isBlank(value)){
+                //添加请求头信息
+                ServerHttpRequest request = exchange.getRequest().mutate().header("Authorization", "Bearer " + value).build();
+                ServerWebExchange build = exchange.mutate().request(request).build();
+                exchanges[0]=build;
+                return value;
+            }
         }
-        return token;
+        return null;
     }
 
 

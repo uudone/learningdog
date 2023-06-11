@@ -27,6 +27,7 @@ public class CourseBaseServiceTest {
         queryCourseParamsDto.setPublishStatus("203001");
         //分页参数
         PageParams pageParams=new PageParams(1L,2L);
-        System.out.println(courseBaseService.queryCourseBaseList(pageParams, queryCourseParamsDto));
+        Long companyId=1232141425L;
+        System.out.println(courseBaseService.queryCourseBaseList(companyId,pageParams, queryCourseParamsDto));
     }
 }

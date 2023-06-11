@@ -69,7 +69,7 @@ public class CoursePublishServiceImpl extends ServiceImpl<CoursePublishMapper, C
 
     @Override
     @Transactional
-    public void publish(Long companyId, Long courseId) {
+    public void publish(Long companyId, Long courseId,String token) {
         //查询课程预发布表
         CoursePublishPre coursePublishPre=coursePublishPreMapper.selectById(courseId);
         if (coursePublishPre==null){
@@ -106,7 +106,7 @@ public class CoursePublishServiceImpl extends ServiceImpl<CoursePublishMapper, C
         //修改课程基本信息表的发布状态
         courseBaseService.updatePublishStatus(courseId,CoursePublishStatus.PUBLISHED);
         //保存到消息处理表中
-        coursePublishService.saveCoursePublishMessage(courseId,companyId);
+        coursePublishService.saveCoursePublishMessage(courseId,companyId,token);
         //删除预发布课程表中的记录
         int delete = coursePublishPreMapper.deleteById(courseId);
         if (delete<=0){
@@ -118,8 +118,8 @@ public class CoursePublishServiceImpl extends ServiceImpl<CoursePublishMapper, C
 
     @Override
     @Transactional
-    public void saveCoursePublishMessage(Long courseId,Long companyId) {
-        MqMessage mqMessage=mqMessageService.addMessage("course_publish",String.valueOf(courseId),String.valueOf(companyId),null);
+    public void saveCoursePublishMessage(Long courseId,Long companyId,String token) {
+        MqMessage mqMessage=mqMessageService.addMessage("course_publish",String.valueOf(courseId),String.valueOf(companyId),token);
         if (mqMessage==null){
             LearningdogException.cast(CommonError.UNKNOWN_ERROR);
         }
@@ -193,10 +193,10 @@ public class CoursePublishServiceImpl extends ServiceImpl<CoursePublishMapper, C
     }
 
     @Override
-    public void uploadCourseHtml(long courseId, File file) {
+    public void uploadCourseHtml(long companyId,long courseId, File file,String token) {
         try{
             MultipartFile multipartFile= MultipartSupportConfig.getMultipartFile(file);
-            String course=mediaClient.uploadFile(multipartFile,null,courseId+".html");
+            String course=mediaClient.uploadFile(multipartFile,null,courseId+".html",token);
             if (course==null){
                 throw new RuntimeException("上传课程静态文件异常");
             }

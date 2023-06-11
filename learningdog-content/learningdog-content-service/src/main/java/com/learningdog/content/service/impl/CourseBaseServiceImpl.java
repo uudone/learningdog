@@ -58,12 +58,13 @@ public class CourseBaseServiceImpl extends ServiceImpl<CourseBaseMapper, CourseB
     MediaClient mediaClient;
 
     @Override
-    public PageResult<CourseBase> queryCourseBaseList(PageParams pageParams, QueryCourseParamsDto queryCourseParamsDto) {
+    public PageResult<CourseBase> queryCourseBaseList(Long companyId,PageParams pageParams, QueryCourseParamsDto queryCourseParamsDto) {
         LambdaQueryWrapper<CourseBase> queryWrapper=new LambdaQueryWrapper<>();
         //设置查询参数
         queryWrapper.like(StringUtils.isNotEmpty(queryCourseParamsDto.getCourseName()),CourseBase::getName,queryCourseParamsDto.getCourseName());
         queryWrapper.eq(StringUtils.isNotEmpty(queryCourseParamsDto.getAuditStatus()),CourseBase::getAuditStatus,queryCourseParamsDto.getAuditStatus());
         queryWrapper.eq(StringUtils.isNotEmpty(queryCourseParamsDto.getPublishStatus()),CourseBase::getStatus,queryCourseParamsDto.getPublishStatus());
+        queryWrapper.eq(CourseBase::getCompanyId,companyId);
         //设置分页参数
         Page<CourseBase> page=new Page<>(pageParams.getPageNo(),pageParams.getPageSize());
         Page<CourseBase> pageResult = courseBaseMapper.selectPage(page, queryWrapper);

@@ -1,8 +1,10 @@
-package com.learningdog.util;
+package com.learningdog.content.util;
 
 import com.alibaba.fastjson.JSON;
 import com.learningdog.auth.po.User;
+import com.learningdog.base.exception.LearningdogException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
@@ -24,6 +26,20 @@ public class SecurityUtils {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * @param :
+     * @return Long
+     * @author getjiajia
+     * @description 获取user下的companyId
+     */
+    public static Long getCompanyId(){
+        String companyIdStr = SecurityUtils.getUser().getCompanyId();
+        if (StringUtils.isEmpty(companyIdStr)){
+            LearningdogException.cast("没有任何机构权限，无法操作");
+        }
+        return Long.parseLong(companyIdStr);
     }
 
 

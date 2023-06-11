@@ -48,12 +48,13 @@ public class CoursePublishTask extends MessageProcessAbstract {
         //获取消息中业务相关信息
         String businessKey1=mqMessage.getBusinessKey1();
         String businessKey2 = mqMessage.getBusinessKey2();
+        String token=mqMessage.getBusinessKey3();
         long courseId=Long.parseLong(businessKey1);
         long companyId=Long.parseLong(businessKey2);
         //课程静态化
-        generateCourseHtml(mqMessage,courseId,companyId);
+        generateCourseHtml(mqMessage,courseId,companyId,token);
         //课程索引
-        saveCourseIndex(mqMessage,courseId);
+        saveCourseIndex(mqMessage,courseId,token);
         //课程缓存
         saveCourseCache(mqMessage,courseId);
         return true;
@@ -62,11 +63,13 @@ public class CoursePublishTask extends MessageProcessAbstract {
     /**
      * @param mqMessage:
      * @param courseId:
+     * @param companyId:
+     * @param token:
      * @return void
      * @author getjiajia
      * @description 生成课程静态化页面并上传到文件系统
      */
-    public void generateCourseHtml(MqMessage mqMessage,long courseId,long companyId){
+    public void generateCourseHtml(MqMessage mqMessage,long courseId,long companyId,String token){
         log.debug("开始课程页面静态化，课程id:{}",courseId);
         long messageId=mqMessage.getId();
         int stageOne= mqMessageService.getStageOne(messageId);
@@ -80,7 +83,7 @@ public class CoursePublishTask extends MessageProcessAbstract {
             throw new RuntimeException("课程页面静态化失败，courseId："+courseId);
         }
         //上传静态页面到minio中
-        coursePublishService.uploadCourseHtml(courseId,file);
+        coursePublishService.uploadCourseHtml(companyId,courseId,file,token);
         //保存第一阶段状态
         mqMessageService.completeStageOne(messageId);
         log.debug("课程页面静态化成功，课程id:{}",courseId);
@@ -89,11 +92,12 @@ public class CoursePublishTask extends MessageProcessAbstract {
     /**
      * @param mqMessage:
      * @param courseId:
+     * @param token:
      * @return void
      * @author getjiajia
      * @description 保存课程索引信息
      */
-    public void saveCourseIndex(MqMessage mqMessage,long courseId){
+    public void saveCourseIndex(MqMessage mqMessage,long courseId,String token){
         log.debug("开始保存课程索引信息,课程id:{}",courseId);
         long messageId=mqMessage.getId();
         int stageTwo=mqMessageService.getStageTwo(messageId);
@@ -109,7 +113,7 @@ public class CoursePublishTask extends MessageProcessAbstract {
         }
         CourseIndex courseIndex=new CourseIndex();
         BeanUtils.copyProperties(coursePublish,courseIndex);
-        boolean result= searchClient.add(courseIndex);
+        boolean result= searchClient.add(courseIndex,token);
         if (!result){
             log.debug("课程索引信息保存失败课程id:{}",courseId);
             return;

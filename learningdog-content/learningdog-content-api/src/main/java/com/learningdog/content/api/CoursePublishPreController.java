@@ -2,10 +2,12 @@ package com.learningdog.content.api;
 
 import com.learningdog.content.model.dto.CoursePreviewDto;
 import com.learningdog.content.service.CoursePublishPreService;
+import com.learningdog.content.util.SecurityUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -40,9 +42,9 @@ public class CoursePublishPreController {
     @ApiOperation("提交课程审核")
     @PostMapping("/courseaudit/commit/{courseId}")
     @ResponseBody
+    @PreAuthorize("hasAuthority('lg_teachmanager_course_publish')")
     public void commitAudit(@PathVariable("courseId")Long courseId){
-        //todo:机构id，由于认证系统没有上线暂时硬编码
-        Long companyId = 1232141425L;
+        Long companyId = SecurityUtils.getCompanyId();
         coursePublishPreService.commitAudit(companyId,courseId);
     }
 }

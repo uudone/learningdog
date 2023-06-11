@@ -18,19 +18,22 @@ public interface CoursePublishService extends IService<CoursePublish> {
     /**
      * @param companyId:
      * @param courseId:
+     * @param token:
      * @return void
      * @author getjiajia
      * @description 课程发布
      */
-    void publish(Long companyId,Long courseId);
+    void publish(Long companyId,Long courseId,String token);
 
     /**
      * @param courseId:
+     * @param companyId:
+     * @param token:
      * @return void
      * @author getjiajia
      * @description 保存消息表记录
      */
-    void saveCoursePublishMessage(Long courseId,Long companyId);
+    void saveCoursePublishMessage(Long courseId,Long companyId,String token);
 
     /**
      * @param courseId:
@@ -41,12 +44,15 @@ public interface CoursePublishService extends IService<CoursePublish> {
     File generateCourseHtml(long courseId);
 
     /**
+     * @param companyId:
+     * @param courseId:
      * @param file:
+     * @param token:
      * @return void
      * @author getjiajia
      * @description 上传课程静态化页面
      */
-    void uploadCourseHtml(long courseId,File file);
+    void uploadCourseHtml(long companyId,long courseId,File file,String token);
 
     /**
      * @param companyId:

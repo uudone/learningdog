@@ -18,7 +18,7 @@ public class SearchClientFallbackFactory implements FallbackFactory<SearchClient
     public SearchClient create(Throwable throwable) {
         return new SearchClient() {
             @Override
-            public Boolean add(CourseIndex courseIndex) {
+            public Boolean add(CourseIndex courseIndex,String authorization) {
                 log.debug("调用搜索add方法时发生熔断走降级方法,熔断异常:", throwable.getMessage());
                 return false;
             }
