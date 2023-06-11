@@ -21,3 +21,17 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsibGVhcm5pb
 ### 通过网关访问资源服务
 GET {{gateway_host}}/content/course/2
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsibGVhcm5pbmdkb2ciXSwidXNlcl9uYW1lIjoie1wiYmlydGhkYXlcIjpcIjIwMjItMDktMjhUMTk6Mjg6NDZcIixcImNyZWF0ZVRpbWVcIjpcIjIwMjItMDktMjhUMDg6MzI6MDNcIixcImlkXCI6XCI1MFwiLFwibmFtZVwiOlwi5a2m55SfMVwiLFwibmlja25hbWVcIjpcIuWkp-awtOeJm1wiLFwic2V4XCI6XCIxXCIsXCJzdGF0dXNcIjpcIjFcIixcInVzZXJuYW1lXCI6XCJzdHUxXCIsXCJ1c2VycGljXCI6XCJodHRwOi8vZmlsZS41MXh1ZWNoZW5nLmNuL2RkZGZcIixcInV0eXBlXCI6XCIxMDEwMDFcIn0iLCJzY29wZSI6WyJhbGwiXSwiZXhwIjoxNjg2MjMxNTM1LCJhdXRob3JpdGllcyI6WyJwMSJdLCJqdGkiOiJlNjFlMTNhMy0wYTMwLTQ5ODktODk5MC1iYjI0MDQyNzVkZjQiLCJjbGllbnRfaWQiOiJMZ1dlYkFwcCJ9.l3wIotGZl5V8SfD-NUzL_4kO7hCJgdmENnHC37TwVmg
+
+### 重置密码
+POST {{gateway_host}}/auth/resetpassword
+Content-Type: application/json
+
+{
+  "cellphone":"",
+  "email":"3245719023@qq.com",
+  "checkcodekey":"123",
+  "checkcode":"email:bc0710594d964cf8af6848ba0678b75e",
+  "confirmpwd":"123456",
+  "password":"123456"
+}
+

@@ -10,6 +10,8 @@ import com.learningdog.auth.po.User;
 import com.learningdog.auth.po.UserRole;
 import com.learningdog.auth.service.AuthService;
 import com.learningdog.auth.service.WxAuthService;
+import com.learningdog.base.code.RoleTypeID;
+import com.learningdog.base.code.UserType;
 import com.learningdog.feign.client.CheckCodeClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -166,7 +168,7 @@ public class WxAuthServiceImpl implements AuthService, WxAuthService {
         user.setName(user_map.get("nickname"));
         user.setUsername(user_map.get("nickname"));
         user.setPassword(unionid);
-        user.setUtype("101001");//学生类型
+        user.setUtype(UserType.STUDENT);//学生类型
         user.setStatus("1");
         user.setCreateTime(LocalDateTime.now());
         userMapper.insert(user);
@@ -174,7 +176,7 @@ public class WxAuthServiceImpl implements AuthService, WxAuthService {
         userRole.setId(UUID.randomUUID().toString());
         userRole.setCreateTime(LocalDateTime.now());
         userRole.setUserId(userId);
-        userRole.setRoleId("17");
+        userRole.setRoleId(RoleTypeID.STUDENT);
         userRoleMapper.insert(userRole);
         return user;
     }
