@@ -86,11 +86,12 @@ public class CoursePublishServiceImpl extends ServiceImpl<CoursePublishMapper, C
         //保存课程发布信息
         CoursePublish coursePublish=new CoursePublish();
         BeanUtils.copyProperties(coursePublishPre,coursePublish);
-        coursePublish.setCreateDate(LocalDateTime.now());
+        coursePublish.setOnlineDate(LocalDateTime.now());
         coursePublish.setStatus(CoursePublishStatus.PUBLISHED);
         //查询课程发布表中是否有该课程
         CoursePublish coursePublishFromDB=coursePublishMapper.selectById(courseId);
         if (coursePublishFromDB==null){
+            coursePublish.setCreateDate(LocalDateTime.now());
             int insert=coursePublishMapper.insert(coursePublish);
             if (insert<=0){
                 log.error("插入到CoursePublish表失败，id={}",courseId);
@@ -226,7 +227,8 @@ public class CoursePublishServiceImpl extends ServiceImpl<CoursePublishMapper, C
         courseBaseService.updatePublishStatus(courseId,CoursePublishStatus.OFFLINE);
         coursePublishMapper.update(null,new LambdaUpdateWrapper<CoursePublish>()
                 .eq(CoursePublish::getId,courseId)
-                .set(CoursePublish::getStatus,CoursePublishStatus.OFFLINE));
+                .set(CoursePublish::getStatus,CoursePublishStatus.OFFLINE)
+                .set(CoursePublish::getOfflineDate,LocalDateTime.now()));
         //修改课程审核状态为未提交
         courseBaseService.updateAuditStatus(courseId,CourseAuditStatus.UN_SUBMITTED);
         //删除es中的索引记录

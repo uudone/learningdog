@@ -126,3 +126,6 @@ POST {{gateway_host}}/content/courseaudit/commit/75
 
 ### 课程发布
 POST {{gateway_host}}/content/coursepublish/122
+
+### 查询课程发布信息
+GET {{content_host}}/content/r/coursepublish/2

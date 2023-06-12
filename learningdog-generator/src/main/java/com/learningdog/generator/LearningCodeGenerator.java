@@ -15,19 +15,21 @@ import java.util.Arrays;
  */
 public class LearningCodeGenerator {
 
-	// TODO 修改服务名以及数据表名
+	//  修改服务名以及数据表名
 	private static final String SERVICE_NAME = "learning";
 
 	//数据库账号
 	private static final String DATA_SOURCE_USER_NAME  = "root";
 	//数据库密码
-	private static final String DATA_SOURCE_PASSWORD  = "mysql";
+	private static final String DATA_SOURCE_PASSWORD  = "123456";
 	//生成的表
 	private static final String[] TABLE_NAMES = new String[]{
-			"xc_learn_record"
+			"learn_record",
+			"choose_course",
+			"course_table"
 	};
 
-	// TODO 默认生成entity，需要生成DTO修改此变量
+	//  默认生成entity，需要生成DTO修改此变量
 	// 一般情况下要先生成 DTO类 然后修改此参数再生成 PO 类。
 	private static final Boolean IS_DTO = false;
 
@@ -40,8 +42,8 @@ public class LearningCodeGenerator {
 		GlobalConfig gc = new GlobalConfig();
 		gc.setFileOverride(true);
 		//生成路径
-		gc.setOutputDir(System.getProperty("user.dir") + "/xuecheng-plus-generator/src/main/java");
-		gc.setAuthor("itcast");
+		gc.setOutputDir(System.getProperty("user.dir") + "/learningdog-generator/src/main/java");
+		gc.setAuthor("getjiajia");
 		gc.setOpen(false);
 		gc.setSwagger2(false);
 		gc.setServiceName("%sService");
@@ -57,7 +59,7 @@ public class LearningCodeGenerator {
 		// 数据库配置
 		DataSourceConfig dsc = new DataSourceConfig();
 		dsc.setDbType(DbType.MYSQL);
-		dsc.setUrl("jdbc:mysql://192.168.101.65:3306/xcplus_" + SERVICE_NAME
+		dsc.setUrl("jdbc:mysql://:3306/lg_" + SERVICE_NAME
 				+ "?serverTimezone=UTC&useUnicode=true&useSSL=false&characterEncoding=utf8");
 //		dsc.setDriverName("com.mysql.jdbc.Driver");
 		dsc.setDriverName("com.mysql.cj.jdbc.Driver");
@@ -68,11 +70,11 @@ public class LearningCodeGenerator {
 		// 包配置
 		PackageConfig pc = new PackageConfig();
 		pc.setModuleName(SERVICE_NAME);
-		pc.setParent("com.xuecheng");
+		pc.setParent("com.learningdog");
 
 		pc.setServiceImpl("service.impl");
 		pc.setXml("mapper");
-		pc.setEntity("model.po");
+		pc.setEntity("po");
 		mpg.setPackageInfo(pc);
 
 

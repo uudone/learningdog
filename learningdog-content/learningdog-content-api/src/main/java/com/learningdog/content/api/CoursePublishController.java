@@ -1,5 +1,6 @@
 package com.learningdog.content.api;
 
+import com.learningdog.content.po.CoursePublish;
 import com.learningdog.content.service.CoursePublishService;
 import com.learningdog.content.util.SecurityUtils;
 import io.swagger.annotations.Api;
@@ -46,6 +47,13 @@ public class CoursePublishController {
     public void courseoffline(@PathVariable("courseId")Long courseId){
         Long companyId= SecurityUtils.getCompanyId();
         coursePublishService.offline(companyId,courseId);
+    }
+
+    @ApiOperation("查询课程发布信息")
+    @ResponseBody
+    @GetMapping("/r/coursepublish/{courseId}")
+    public CoursePublish getCoursePublish(@PathVariable("courseId") Long courseId){
+        return coursePublishService.getById(courseId);
     }
 
 }

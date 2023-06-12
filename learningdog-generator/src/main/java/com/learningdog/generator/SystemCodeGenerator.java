@@ -15,7 +15,7 @@ import java.util.Arrays;
  */
 public class SystemCodeGenerator {
 
-	// TODO 修改服务名以及数据表名
+	//  修改服务名以及数据表名
 	private static final String SERVICE_NAME = "system";
 
 	private static final String DATA_SOURCE_USER_NAME  = "root";
@@ -25,7 +25,7 @@ public class SystemCodeGenerator {
 			"dictionary",
 	};
 
-	// TODO 默认生成entity，需要生成DTO修改此变量
+	//  默认生成entity，需要生成DTO修改此变量
 	// 一般情况下要先生成 DTO类 然后修改此参数再生成 PO 类。
 	private static final Boolean IS_DTO = false;
 
