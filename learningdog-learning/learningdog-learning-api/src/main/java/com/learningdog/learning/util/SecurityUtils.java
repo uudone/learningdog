@@ -23,7 +23,6 @@ public class SecurityUtils {
             }
         }catch (Exception e){
             log.error("获取当前登录用户身份出错:{}", e.getMessage());
-            e.printStackTrace();
         }
         return null;
     }
@@ -35,11 +34,27 @@ public class SecurityUtils {
      * @description 获取user下的companyId
      */
     public static Long getCompanyId(){
-        String companyIdStr = SecurityUtils.getUser().getCompanyId();
-        if (StringUtils.isEmpty(companyIdStr)){
+        User user=SecurityUtils.getUser();
+        if (user==null){
+            LearningdogException.cast("请登录后再操作");
+        }
+        String companyIdStr = user.getCompanyId();
+        if (StringUtils.isBlank(companyIdStr)){
             LearningdogException.cast("没有任何机构权限，无法操作");
         }
         return Long.parseLong(companyIdStr);
+    }
+
+    public static String getUserId(){
+        User user=SecurityUtils.getUser();
+        if (user==null){
+            LearningdogException.cast("请登录后再操作");
+        }
+        String userId=user.getId();
+        if (StringUtils.isBlank(userId)){
+            LearningdogException.cast("没有查询到用户信息，请登录后再操作");
+        }
+        return userId;
     }
 
 

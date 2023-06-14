@@ -5,7 +5,7 @@ POST {{auth_host}}/auth/oauth/token?client_id=LgWebApp&client_secret=LgWebApp&gr
 
 
 ### 密码模式
-POST {{auth_host}}/auth/oauth/token?client_id=LgWebApp&client_secret=LgWebApp&grant_type=password&username={"username":"stu1","password":"111111","checkcode":"6r5g","checkcodekey":"checkcode:a3184ed00eb84d7dbe544f5e3f463a07","authType":"password"}
+POST {{auth_host}}/auth/oauth/token?client_id=LgWebApp&client_secret=LgWebApp&grant_type=password&username={"username":"t1","password":"123456","checkcode":"9U2Y","checkcodekey":"checkcode:6a6acc65bf574583b05f878b30b61914","authType":"password"}
 
 ### 校验令牌
 POST {{auth_host}}/auth/oauth/check_token?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsibGVhcm5pbmdkb2ciXSwidXNlcl9uYW1lIjoie1wiY3JlYXRlVGltZVwiOlwiMjAyMy0wNi0wOVQyMzoxNzoxNVwiLFwiaWRcIjpcImQ2N2RhZDY5LTQyMzMtNDhlYy04M2JiLThhY2I5MDU3NTU2ZFwiLFwibmFtZVwiOlwiK1wiLFwibmlja25hbWVcIjpcIitcIixcInN0YXR1c1wiOlwiMVwiLFwidXNlcm5hbWVcIjpcIitcIixcInVzZXJwaWNcIjpcImh0dHBzOi8vdGhpcmR3eC5xbG9nby5jbi9tbW9wZW4vdmlfMzIvODhVcHVKRGJiT3lGQ0R3MENGQWljWk85b2xHbmljczRjWldoU3lYeEtVZjZ4TWx5ZGNYUTJnTEhDaHgyVzRiOGljTllzVFhCTkdlZ0EzSnd0aktwS1laUFEvMTMyXCIsXCJ1dHlwZVwiOlwiMTAxMDAxXCIsXCJ3eFVuaW9uaWRcIjpcIm9XZ0d6MUhEWENNZzFHcW1PbjZJcUx2eXJQZlFcIn0iLCJzY29wZSI6WyJhbGwiXSwiZXhwIjoxNjg2MzkwMjc3LCJhdXRob3JpdGllcyI6WyJwMSJdLCJqdGkiOiJiZjBkODEwZi0zZTc4LTRkOTctYTViYi1hYTZlYmE1ZGQ5ODkiLCJjbGllbnRfaWQiOiJMZ1dlYkFwcCJ9.bijmQmMrEy1MoFgCRgJExg_ONIbXRxMKHqJYu4V3A7E

@@ -16,6 +16,6 @@ import org.springframework.web.bind.annotation.PathVariable;
         fallbackFactory = ContentClientFallbackFactory.class)
 public interface ContentClient {
 
-    @GetMapping("/r/coursepublish/{courseId}")
+    @GetMapping("/coursepublish/{courseId}")
     public CoursePublish getCoursePublish(@PathVariable("courseId") Long courseId);
 }

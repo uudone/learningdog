@@ -5,7 +5,7 @@ package com.learningdog.base.code;
  * @description: 选课学习资格
  * @version: 1.0
  */
-public interface SelectCoursePermission {
+public interface ChooseCoursePermission {
 
     //正常学习
     String TO_LEARN="702001";

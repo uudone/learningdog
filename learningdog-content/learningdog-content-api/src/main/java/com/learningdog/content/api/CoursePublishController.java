@@ -51,7 +51,7 @@ public class CoursePublishController {
 
     @ApiOperation("查询课程发布信息")
     @ResponseBody
-    @GetMapping("/r/coursepublish/{courseId}")
+    @GetMapping("/coursepublish/{courseId}")
     public CoursePublish getCoursePublish(@PathVariable("courseId") Long courseId){
         return coursePublishService.getById(courseId);
     }

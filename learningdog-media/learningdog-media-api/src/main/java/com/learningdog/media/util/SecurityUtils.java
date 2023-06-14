@@ -35,8 +35,12 @@ public class SecurityUtils {
      * @description 获取user下的companyId
      */
     public static Long getCompanyId(){
-        String companyIdStr = SecurityUtils.getUser().getCompanyId();
-        if (StringUtils.isEmpty(companyIdStr)){
+        User user=SecurityUtils.getUser();
+        if (user==null){
+            LearningdogException.cast("请登录后再操作");
+        }
+        String companyIdStr = user.getCompanyId();
+        if (StringUtils.isBlank(companyIdStr)){
             LearningdogException.cast("没有任何机构权限，无法操作");
         }
         return Long.parseLong(companyIdStr);
