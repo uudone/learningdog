@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
  * @author getjiajia
  */
 @Data
-@TableName("order")
+@TableName("lg_order.order")
 public class Order implements Serializable {
 
     private static final long serialVersionUID = 1L;

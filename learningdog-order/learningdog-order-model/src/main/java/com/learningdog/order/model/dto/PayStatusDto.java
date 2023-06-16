@@ -1,6 +1,7 @@
 package com.learningdog.order.model.dto;
 
 import lombok.Data;
+import lombok.ToString;
 
 /**
  * @author: getjiajia
@@ -8,6 +9,7 @@ import lombok.Data;
  * @version: 1.0
  */
 @Data
+@ToString
 public class PayStatusDto {
     //商户订单号
     private String out_trade_no;
