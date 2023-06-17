@@ -1,17 +1,21 @@
 package com.learningdog.learning.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.learningdog.base.code.ChooseCoursePermission;
 import com.learningdog.base.code.ChooseCourseStatus;
 import com.learningdog.base.exception.LearningdogException;
+import com.learningdog.base.model.PageResult;
 import com.learningdog.learning.mapper.ChooseCourseMapper;
 import com.learningdog.learning.mapper.CourseTableMapper;
 import com.learningdog.learning.model.dto.CourseTableDto;
+import com.learningdog.learning.model.dto.MyCourseTableParams;
 import com.learningdog.learning.po.ChooseCourse;
 import com.learningdog.learning.po.CourseTable;
 import com.learningdog.learning.service.CourseTableService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -99,6 +103,24 @@ public class CourseTableServiceImpl extends ServiceImpl<CourseTableMapper, Cours
         //如果没有过期
         courseTableDto.setLearnStatus(ChooseCoursePermission.TO_LEARN);
         return courseTableDto;
+    }
+
+    @Override
+    public PageResult<CourseTable> getMyCourseTable(MyCourseTableParams params) {
+        String userId=params.getUserId();
+        long pageNo=params.getPage();
+        //每页记录数，固定为4
+        long pageSize=4;
+        Page<CourseTable> page=new Page<>(pageNo,pageSize);
+        Page<CourseTable> selectPage = courseTableMapper.selectPage(page, new LambdaQueryWrapper<CourseTable>()
+                .eq(CourseTable::getUserId, userId)
+                .eq(StringUtils.isNotBlank(params.getCourseType()),CourseTable::getCourseType,params.getCourseType()));
+        PageResult<CourseTable> pageResult=new PageResult<>();
+        pageResult.setItems(selectPage.getRecords());
+        pageResult.setPage(pageNo);
+        pageResult.setPageSize(pageSize);
+        pageResult.setCounts(selectPage.getTotal());
+        return pageResult;
     }
 
     /**

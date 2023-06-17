@@ -1,8 +1,9 @@
 package com.learningdog.learning.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.learningdog.base.model.PageResult;
 import com.learningdog.learning.model.dto.CourseTableDto;
-import com.learningdog.learning.po.ChooseCourse;
+import com.learningdog.learning.model.dto.MyCourseTableParams;
 import com.learningdog.learning.po.CourseTable;
 
 /**
@@ -34,4 +35,11 @@ public interface CourseTableService extends IService<CourseTable> {
      */
     CourseTableDto getLearningStatus(String userId,Long courseId);
 
+    /**
+     * @param params:
+     * @return PageResult<CourseTable>
+     * @author getjiajia
+     * @description 分页查询我的课程表
+     */
+    PageResult<CourseTable> getMyCourseTable(MyCourseTableParams params);
 }
