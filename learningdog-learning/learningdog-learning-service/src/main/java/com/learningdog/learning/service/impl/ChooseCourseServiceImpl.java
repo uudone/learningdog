@@ -1,6 +1,7 @@
 package com.learningdog.learning.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.learningdog.base.code.ChooseCourseStatus;
 import com.learningdog.base.code.ChooseCourseType;
@@ -13,6 +14,7 @@ import com.learningdog.learning.mapper.ChooseCourseMapper;
 import com.learningdog.learning.model.dto.ChooseCourseDto;
 import com.learningdog.learning.model.dto.CourseTableDto;
 import com.learningdog.learning.po.ChooseCourse;
+import com.learningdog.learning.po.CourseTable;
 import com.learningdog.learning.service.ChooseCourseService;
 import com.learningdog.learning.service.CourseTableService;
 import lombok.extern.slf4j.Slf4j;
@@ -137,6 +139,33 @@ public class ChooseCourseServiceImpl extends ServiceImpl<ChooseCourseMapper, Cho
             }
         }
         return chooseCourseNew;
+    }
+
+    @Override
+    @Transactional
+    public boolean finishPayChargeCourse(String chooseCourseId) {
+        Long id=Long.parseLong(chooseCourseId);
+        //查询选课记录
+        ChooseCourse chooseCourse = chooseCourseMapper.selectById(id);
+        if (chooseCourse==null){
+            log.debug("选课记录不存在,chooseCourseId:{}",id);
+            LearningdogException.cast("选课记录不存在");
+        }
+        //修改选课记录的状态
+        int update = chooseCourseMapper.update(null, new LambdaUpdateWrapper<ChooseCourse>()
+                .eq(ChooseCourse::getId, id)
+                .set(ChooseCourse::getStatus, ChooseCourseStatus.SUCCESS));
+        if (update<=0){
+            log.debug("修改选课记录的状态失败，chooseCourseId:{}",id);
+            return false;
+        }
+        //插入到我的课程表中
+        CourseTable courseTable = courseTableService.addCourseTable(id);
+        if (courseTable==null){
+            log.debug("插入到我的课程表中失败，chooseCourseId:{}",id);
+            return false;
+        }
+        return true;
     }
 
     /**

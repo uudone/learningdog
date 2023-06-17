@@ -7,6 +7,8 @@ import com.learningdog.base.code.OrderStatus;
 import com.learningdog.base.exception.LearningdogException;
 import com.learningdog.base.utils.IdWorkerUtils;
 import com.learningdog.base.utils.QRCodeUtil;
+import com.learningdog.messagesdk.po.MqMessage;
+import com.learningdog.messagesdk.service.MqMessageService;
 import com.learningdog.order.mapper.GoodsMapper;
 import com.learningdog.order.mapper.OrderMapper;
 import com.learningdog.order.mapper.PayRecordMapper;
@@ -18,6 +20,11 @@ import com.learningdog.order.po.PayRecord;
 import com.learningdog.order.service.OrderService;
 import com.learningdog.order.service.PayRecordService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageBuilder;
+import org.springframework.amqp.core.MessageDeliveryMode;
+import org.springframework.amqp.rabbit.connection.CorrelationData;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -25,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -49,6 +57,12 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     OrderService orderService;
     @Value("${pay.urlpattern}")
     String urlPattern;
+    @Resource
+    MqMessageService mqMessageService;
+    @Resource
+    RabbitTemplate rabbitTemplate;
+    @Value("${paynotify.exchange}")
+    String paynotify_exchange;
 
     @Override
     @Transactional
@@ -96,6 +110,34 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             goodsMapper.insert(goodsNew);
         });
         return order;
+    }
+
+    @Override
+    public void notifyPayResult(MqMessage mqMessage) {
+        String msg=JSON.toJSONString(mqMessage);
+        //消息持久化
+        Message message= MessageBuilder.withBody(msg.getBytes(StandardCharsets.UTF_8))
+                .setDeliveryMode(MessageDeliveryMode.PERSISTENT)
+                .build();
+        //消息id
+        CorrelationData correlationData=new CorrelationData(mqMessage.getId().toString());
+        //添加ConfirmCallBack
+        correlationData.getFuture().addCallback(
+                result->{
+                   if(result.isAck()) {
+                       log.debug("通知支付结果消息发送成功, ID:{}", correlationData.getId());
+                       //删除消息表中的记录
+                       mqMessageService.completed(mqMessage.getId());
+                   }else {
+                       log.error("通知支付结果消息发送失败, ID:{}, 原因{}",correlationData.getId(), result.getReason());
+                   }
+                },
+                ex->{
+                    log.error("消息发送异常, ID:{}, 原因{}",correlationData.getId(),ex.getMessage());
+                }
+        );
+        //发送消息
+        rabbitTemplate.convertAndSend(paynotify_exchange,"",message,correlationData);
     }
 
 

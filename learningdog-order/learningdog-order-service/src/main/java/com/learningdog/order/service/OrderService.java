@@ -1,6 +1,7 @@
 package com.learningdog.order.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.learningdog.messagesdk.po.MqMessage;
 import com.learningdog.order.model.dto.AddOrderDto;
 import com.learningdog.order.model.dto.PayRecordDto;
 import com.learningdog.order.po.Order;
@@ -32,6 +33,14 @@ public interface OrderService extends IService<Order> {
      * @description 保存订单数据
      */
     Order saveOrder(String userId,AddOrderDto addOrderDto);
+
+    /**
+     * @param mqMessage:
+     * @return void
+     * @author getjiajia
+     * @description 发送订单支付完成通知
+     */
+    void notifyPayResult(MqMessage mqMessage);
 
 
 }

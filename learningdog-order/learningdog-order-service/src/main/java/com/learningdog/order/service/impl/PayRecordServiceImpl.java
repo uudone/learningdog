@@ -14,6 +14,8 @@ import com.learningdog.base.code.OrderStatus;
 import com.learningdog.base.code.PayStatus;
 import com.learningdog.base.exception.LearningdogException;
 import com.learningdog.base.utils.IdWorkerUtils;
+import com.learningdog.messagesdk.po.MqMessage;
+import com.learningdog.messagesdk.service.MqMessageService;
 import com.learningdog.order.config.AlipayConfig;
 import com.learningdog.order.mapper.OrderMapper;
 import com.learningdog.order.mapper.PayRecordMapper;
@@ -21,6 +23,7 @@ import com.learningdog.order.model.dto.PayRecordDto;
 import com.learningdog.order.model.dto.PayStatusDto;
 import com.learningdog.order.po.Order;
 import com.learningdog.order.po.PayRecord;
+import com.learningdog.order.service.OrderService;
 import com.learningdog.order.service.PayRecordService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -55,6 +58,10 @@ public class PayRecordServiceImpl extends ServiceImpl<PayRecordMapper, PayRecord
     private String APP_PRIVATE_KEY;
     @Value("${pay.alipay.ALIPAY_PUBLIC_KEY}")
     private String ALIPAY_PUBLIC_KEY;
+    @Resource
+    MqMessageService mqMessageService;
+    @Resource
+    OrderService orderService;
 
     @Override
     @Transactional
@@ -204,5 +211,8 @@ public class PayRecordServiceImpl extends ServiceImpl<PayRecordMapper, PayRecord
         }else {
             log.info("更新订单表状态成功,订单号:{}", orderId);
         }
+        //通知消息
+        MqMessage mqMessage=mqMessageService.addMessage("paynotify",order.getOutBusinessId(),order.getOrderType(),null);
+        orderService.notifyPayResult(mqMessage);
     }
 }

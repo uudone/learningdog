@@ -43,4 +43,12 @@ public interface ChooseCourseService extends IService<ChooseCourse> {
     ChooseCourse addChargeCourse(String userId,CoursePublish coursePublish);
 
 
+    /**
+     * @param chooseCourseId:
+     * @return boolean
+     * @author getjiajia
+     * @description 完成支付收费课程
+     */
+    boolean finishPayChargeCourse(String chooseCourseId);
+
 }

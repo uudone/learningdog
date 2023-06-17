@@ -50,11 +50,10 @@ public interface PayRecordService extends IService<PayRecord> {
     public PayStatusDto queryPayResultFromAlipay(String payNo);
 
     /**
-     * @description 保存支付宝支付结果
-     * @param payStatusDto  支付结果信息
+     * @param payStatusDto:
      * @return void
-     * @author Mr.M
-     * @date 2022/10/4 16:52
+     * @author getjiajia
+     * @description 保存支付宝支付结果
      */
     public void saveAliPayStatus(PayStatusDto payStatusDto) ;
 
