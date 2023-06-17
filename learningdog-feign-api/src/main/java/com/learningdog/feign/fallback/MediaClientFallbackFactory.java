@@ -41,6 +41,12 @@ public class MediaClientFallbackFactory implements FallbackFactory<MediaClient> 
             public void deleteCourseHtml(String filePath) {
                 log.debug("MediaFeign发生熔断走降级方法，方法：deleteCourseHtml，参数：filePath={}",filePath);
             }
+
+            @Override
+            public String getPlayUrlByMediaId(String mediaId) {
+                log.debug("MediaFeign发生熔断走降级方法，方法：getPlayUrlByMediaId，参数：mediaId={}",mediaId);
+                return null;
+            }
         };
     }
 }

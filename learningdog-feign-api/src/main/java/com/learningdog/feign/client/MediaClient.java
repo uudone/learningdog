@@ -35,4 +35,7 @@ public interface MediaClient {
 
     @DeleteMapping("/courseHtml")
     public void deleteCourseHtml(@RequestParam("filePath") String filePath);
+
+    @GetMapping("/open/preview/{mediaId}")
+    public String getPlayUrlByMediaId(@PathVariable("mediaId")String mediaId);
 }

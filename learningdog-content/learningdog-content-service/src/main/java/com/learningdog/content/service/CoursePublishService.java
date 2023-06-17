@@ -1,6 +1,7 @@
 package com.learningdog.content.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.learningdog.content.model.dto.CoursePublishDto;
 import com.learningdog.content.po.CoursePublish;
 
 import java.io.File;
@@ -62,4 +63,12 @@ public interface CoursePublishService extends IService<CoursePublish> {
      * @description 课程下线
      */
     void offline(Long companyId, Long courseId);
+
+    /**
+     * @param courseId:
+     * @return CoursePublishDto
+     * @author getjiajia
+     * @description 获取课程发布的所有信息
+     */
+    CoursePublishDto getCoursePublishInfo(Long courseId);
 }

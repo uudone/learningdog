@@ -18,6 +18,7 @@ import com.learningdog.content.model.dto.QueryCourseParamsDto;
 import com.learningdog.content.po.*;
 import com.learningdog.content.service.CourseBaseService;
 import com.learningdog.feign.client.MediaClient;
+import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -273,7 +274,13 @@ public class CourseBaseServiceImpl extends ServiceImpl<CourseBaseMapper, CourseB
         //删除课程发布表中的信息
         coursePublishMapper.deleteById(courseId);
         //删除minio中的静态文件html
-        mediaClient.deleteCourseHtml("course/"+courseId+".html");
+        try {
+            mediaClient.deleteCourseHtml("course/"+courseId+".html");
+        }catch (FeignException e){
+            if (!e.getMessage().contains("删除的课程静态文件不存在")){
+                throw e;
+            }
+        }
     }
 
     @Override

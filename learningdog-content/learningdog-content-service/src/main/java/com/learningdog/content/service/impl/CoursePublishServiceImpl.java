@@ -11,9 +11,12 @@ import com.learningdog.content.mapper.CoursePublishMapper;
 import com.learningdog.content.mapper.CoursePublishPreMapper;
 import com.learningdog.content.model.dto.CourseBaseInfoDto;
 import com.learningdog.content.model.dto.CoursePreviewDto;
+import com.learningdog.content.model.dto.CoursePublishDto;
+import com.learningdog.content.model.dto.TeachplanTreeDto;
 import com.learningdog.content.po.CourseMarket;
 import com.learningdog.content.po.CoursePublish;
 import com.learningdog.content.po.CoursePublishPre;
+import com.learningdog.content.po.CourseTeacher;
 import com.learningdog.content.service.CourseBaseService;
 import com.learningdog.content.service.CoursePublishService;
 import com.learningdog.feign.client.MediaClient;
@@ -237,6 +240,34 @@ public class CoursePublishServiceImpl extends ServiceImpl<CoursePublishMapper, C
             log.info("删除课程索引记录失败，courseId：{}",courseId);
             LearningdogException.cast("课程下架失败，请重试");
         }
+    }
+
+    @Override
+    public CoursePublishDto getCoursePublishInfo(Long courseId) {
+        CoursePublish coursePublish=coursePublishMapper.selectById(courseId);
+        if (coursePublish==null){
+            LearningdogException.cast("查询的课程不存在或未发布");
+        }
+        //获取课程基本信息和营销信息
+        CourseBaseInfoDto courseBaseInfoDto=new CourseBaseInfoDto();
+        BeanUtils.copyProperties(coursePublish,courseBaseInfoDto);
+        String courseMarketStr=coursePublish.getMarket();
+        CourseMarket courseMarket=JSON.parseObject(courseMarketStr,CourseMarket.class);
+        courseBaseInfoDto.setQq(courseMarket.getQq());
+        courseBaseInfoDto.setWechat(courseMarket.getWechat());
+        courseBaseInfoDto.setPhone(courseMarket.getPhone());
+        //获取课程计划信息
+        String teachplanStr=coursePublish.getTeachplan();
+        List<TeachplanTreeDto> treeNodes=JSON.parseArray(teachplanStr,TeachplanTreeDto.class);
+        //获取课程教师信息
+        String teacherStr=coursePublish.getTeachers();
+        List<CourseTeacher> teachers=JSON.parseArray(teacherStr,CourseTeacher.class);
+        //封装返回数据
+        CoursePublishDto coursePublishDto=new CoursePublishDto();
+        coursePublishDto.setCourseBase(courseBaseInfoDto);
+        coursePublishDto.setTeachplans(treeNodes);
+        coursePublishDto.setTeachers(teachers);
+        return coursePublishDto;
     }
 
 

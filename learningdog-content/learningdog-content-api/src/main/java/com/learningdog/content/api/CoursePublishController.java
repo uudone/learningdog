@@ -1,5 +1,6 @@
 package com.learningdog.content.api;
 
+import com.learningdog.content.model.dto.CoursePublishDto;
 import com.learningdog.content.po.CoursePublish;
 import com.learningdog.content.service.CoursePublishService;
 import com.learningdog.content.util.SecurityUtils;
@@ -49,11 +50,18 @@ public class CoursePublishController {
         coursePublishService.offline(companyId,courseId);
     }
 
-    @ApiOperation("查询课程发布信息")
+    @ApiOperation("查询课程发布基本信息")
     @ResponseBody
     @GetMapping("/coursepublish/{courseId}")
     public CoursePublish getCoursePublish(@PathVariable("courseId") Long courseId){
         return coursePublishService.getById(courseId);
+    }
+
+    @ApiOperation("查询课程发布所有信息")
+    @ResponseBody
+    @GetMapping("/course/whole/{courseId}")
+    public CoursePublishDto getCoursePublishInfo(@PathVariable("courseId")Long courseId){
+        return coursePublishService.getCoursePublishInfo(courseId);
     }
 
 }

@@ -11,7 +11,7 @@ public class AlipayConfig {
     // 私钥 pkcs8格式的
     //	public static String RSA_PRIVATE_KEY = "";
     // 服务器异步通知页面路径 需http://或者https://格式的完整路径，不能加?id=123这类自定义参数，必须外网可以正常访问
-    public static String notify_url = "https://2d94-221-4-32-53.ngrok-free.app/orders/receivenotify";
+    public static String notify_url = "https://8970-221-4-32-53.ngrok-free.app/orders/receivenotify";
     // 页面跳转同步通知页面路径 需http://或者https://格式的完整路径，不能加?id=123这类自定义参数，必须外网可以正常访问 商户可以自定义同步跳转地址
     public static String return_url = "http://商户网关地址/alipay.trade.wap.pay-JAVA-UTF-8/return_url.jsp";
     // 请求网关地址
