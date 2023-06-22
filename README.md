@@ -1,5 +1,5 @@
 # LearningDog
-学习汪网站，一个提供在线学习的平台
+学习汪网站，一个提供在线学习的平台    
 项目技术：Nacos+OpenFeign+Spring Cloud Gateway+Sentinel+MinIO+XXL-JOB+Elasticsearch+Spring Security+Oauth2+RabbitMQ+Redis
 ### 项目结构
 [--learningdog-parent           父工程  
