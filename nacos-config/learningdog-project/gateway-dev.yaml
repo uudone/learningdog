@@ -1,0 +1,38 @@
+server:
+  port: 63010
+spring:
+  cloud:
+    gateway:
+      routes: #网络路由配置
+        - id: content-api # 路由id，自定义，唯一
+          uri: lb://content-api # 路由目标地址 lb：负载均衡 content-api：nacos注册的服务名称
+          predicates:
+            - Path=/content/** # 这个是按照路径匹配，只要以/content/开头就符合要求
+        - id: system-api
+          uri: lb://system-api
+          predicates:
+            - Path=/system/**
+        - id: media-api
+          uri: lb://media-api
+          predicates:
+            - Path=/media/**
+        - id: search
+          uri: lb://search
+          predicates:
+            - Path=/search/**
+        - id: auth
+          uri: lb://auth-service
+          predicates:
+            - Path=/auth/**
+        - id: checkcode
+          uri: lb://checkcode
+          predicates:
+            - Path=/checkcode/**
+        - id: learning-api
+          uri: lb://learning-api
+          predicates:
+            - Path=/learning/**
+        - id: order-api
+          uri: lb://order-api
+          predicates:
+            - Path=/orders/**

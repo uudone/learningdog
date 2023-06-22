@@ -1,0 +1,36 @@
+spring:
+  datasource:
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://数据库地址:3306/lg_media?serverTimezone=UTC&userUnicode=true&useSSL=false&
+      username: root
+      password: 你的密码
+  #配置本地优先
+  cloud:
+    config:
+      override-none: true
+    
+
+minio:
+  endpoint: http://minio地址:9000
+  accessKey: admin
+  secretKey: admin
+  bucket:
+    files: mediafiles
+    videofiles: video
+
+xxl:
+  job:
+    admin:
+      addresses: http://127.0.0.1:8088/xxl-job-admin
+    executor:
+      appname: media-process-service
+      address:
+      ip:
+      port: 9999
+      logpath: /data/applogs/xxl-job/jobhandler
+      logretentiondays: 7
+    accessToken: default_token
+
+videoprocess:
+  ffmpegpath: ffmpeg文件位置/ffmpeg.exe

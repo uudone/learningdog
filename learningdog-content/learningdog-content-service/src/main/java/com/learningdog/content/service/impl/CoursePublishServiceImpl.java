@@ -25,6 +25,7 @@ import com.learningdog.feign.client.SearchClient;
 import com.learningdog.feign.conf.MultipartSupportConfig;
 import com.learningdog.messagesdk.po.MqMessage;
 import com.learningdog.messagesdk.service.MqMessageService;
+import freemarker.cache.ClassTemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -172,8 +173,7 @@ public class CoursePublishServiceImpl extends ServiceImpl<CoursePublishMapper, C
         FileOutputStream outputStream=null;
         try{
             Configuration configuration=new Configuration(Configuration.getVersion());
-            String classpath=this.getClass().getResource("/").getPath();
-            configuration.setDirectoryForTemplateLoading(new File(classpath+"/templates/"));
+            configuration.setTemplateLoader(new ClassTemplateLoader(this.getClass().getClassLoader(),"/templates"));
             configuration.setDefaultEncoding("utf-8");
             //获取指定模板文件
             Template template=configuration.getTemplate("course_template.ftl");

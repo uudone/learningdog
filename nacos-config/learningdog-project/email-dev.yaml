@@ -1,0 +1,14 @@
+server:
+  servlet:
+    context-path: /email
+  port: 63085
+
+spring:
+  rabbitmq:
+    listener:
+      simple:
+        prefetch: 2
+
+email:
+  from: 邮件发送人
+  secret: 授权码

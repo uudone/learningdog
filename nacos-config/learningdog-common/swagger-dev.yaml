@@ -1,0 +1,6 @@
+swagger:
+  title: "学习汪接口管理"
+  description: "描述接口详细信息"
+  base-package: com.learningdog
+  enabled: true
+  version: 1.0.0

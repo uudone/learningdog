@@ -6,6 +6,7 @@
         <artifactId>learningdog-parent</artifactId>
         <groupId>com.learningdog</groupId>
         <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../learningdog-parent</relativePath>
     </parent>
     <artifactId>learningdog-auth</artifactId>
     <version>0.0.1-SNAPSHOT</version>
@@ -109,5 +110,24 @@
         </dependency>
 
     </dependencies>
+
+    <build>
+        <finalName>${project.artifactId}-${project.version}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
 
 </project>

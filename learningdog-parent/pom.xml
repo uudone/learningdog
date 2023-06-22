@@ -33,6 +33,22 @@
         <elasticsearch.version>7.12.1</elasticsearch.version>
     </properties>
 
+    <modules>
+        <module>../learningdog-auth</module>
+        <module>../learningdog-base</module>
+        <module>../learningdog-checkcode</module>
+        <module>../learningdog-content</module>
+        <module>../learningdog-email</module>
+        <module>../learningdog-feign-api</module>
+        <module>../learningdog-gateway</module>
+        <module>../learningdog-learning</module>
+        <module>../learningdog-media</module>
+        <module>../learningdog-message-sdk</module>
+        <module>../learningdog-order</module>
+        <module>../learningdog-search</module>
+        <module>../learningdog-system</module>
+    </modules>
+
 
 
     <dependencyManagement>

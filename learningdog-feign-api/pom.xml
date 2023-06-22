@@ -6,6 +6,7 @@
         <artifactId>learningdog-parent</artifactId>
         <groupId>com.learningdog</groupId>
         <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../learningdog-parent</relativePath>
     </parent>
     <artifactId>learningdog-feign-api</artifactId>
     <version>0.0.1-SNAPSHOT</version>

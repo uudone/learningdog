@@ -1,0 +1,7 @@
+spring:
+  cloud:
+    sentinel:
+      transport:
+        dashboard: localhost:8849
+      web-context-unify: false
+

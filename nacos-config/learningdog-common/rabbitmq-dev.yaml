@@ -1,0 +1,20 @@
+spring:
+  rabbitmq:
+    host: rbbitmq地址
+    port: 5672
+    virtual-host: /
+    username: root
+    password: 你的密码
+
+email:
+  exchange: email.direct
+  register:
+    queue: register.queue
+    key: register
+  resetpw:
+    queue: resetpw.queue
+    key: resetpw
+paynotify:
+  exchange: paynotify.fanout
+  learning:
+    queue: learning.paynotify.queue
