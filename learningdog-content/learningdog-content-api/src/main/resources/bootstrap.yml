@@ -33,5 +33,8 @@ spring:
           - data-id: sentinel-${spring.profiles.active}.yaml
             group: learningdog-common
             refresh: true
+          - data-id: redis-${spring.profiles.active}.yaml
+            group: learningdog-common
+            refresh: true
   profiles:
     active: dev

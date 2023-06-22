@@ -71,4 +71,20 @@ public interface CoursePublishService extends IService<CoursePublish> {
      * @description 获取课程发布的所有信息
      */
     CoursePublishDto getCoursePublishInfo(Long courseId);
+
+    /**
+     * @param courseId:
+     * @return CoursePublish
+     * @author getjiajia
+     * @description 从缓存中查询课程发布信息
+     */
+    CoursePublish getCoursePublishFromCache(Long courseId);
+
+    /**
+     * @param courseId:
+     * @return void
+     * @author getjiajia
+     * @description 将新增的课程id添加到布隆过滤器
+     */
+    void addCourseIdToBloomFilter(Long courseId);
 }

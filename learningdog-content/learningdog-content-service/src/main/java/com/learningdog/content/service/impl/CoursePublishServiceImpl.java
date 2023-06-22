@@ -1,6 +1,7 @@
 package com.learningdog.content.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.learningdog.base.code.CourseAuditStatus;
@@ -29,12 +30,18 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
+import org.redisson.api.RBloomFilter;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
+import org.redisson.codec.JsonJacksonCodec;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -43,6 +50,8 @@ import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -69,6 +78,33 @@ public class CoursePublishServiceImpl extends ServiceImpl<CoursePublishMapper, C
     MediaClient mediaClient;
     @Resource
     SearchClient searchClient;
+    @Resource
+    RedisTemplate redisTemplate;
+    @Resource
+    RedissonClient redissonClient;
+
+    RBloomFilter<Long> bloomFilter;
+
+    @PostConstruct
+    public void init(){
+        bloomFilter=redissonClient.getBloomFilter("course_publish",new JsonJacksonCodec());
+        this.refreshBloom(bloomFilter);
+    }
+
+    /**
+     * @param bloomFilter:
+     * @return void
+     * @author getjiajia
+     * @description 重新加载布隆过滤器中的数据
+     */
+    private void refreshBloom(RBloomFilter<Long> bloomFilter) {
+        bloomFilter.delete();
+        bloomFilter.tryInit(100000L,0.03);
+        List<Long> courseIdList = this.list(new LambdaQueryWrapper<CoursePublish>()
+                .select(CoursePublish::getId))
+                .stream().map(CoursePublish::getId).collect(Collectors.toList());
+        courseIdList.forEach(bloomFilter::add);
+    }
 
     @Override
     @Transactional
@@ -244,7 +280,7 @@ public class CoursePublishServiceImpl extends ServiceImpl<CoursePublishMapper, C
 
     @Override
     public CoursePublishDto getCoursePublishInfo(Long courseId) {
-        CoursePublish coursePublish=coursePublishMapper.selectById(courseId);
+        CoursePublish coursePublish=getCoursePublishFromCache(courseId);
         if (coursePublish==null){
             LearningdogException.cast("查询的课程不存在或未发布");
         }
@@ -268,6 +304,50 @@ public class CoursePublishServiceImpl extends ServiceImpl<CoursePublishMapper, C
         coursePublishDto.setTeachplans(treeNodes);
         coursePublishDto.setTeachers(teachers);
         return coursePublishDto;
+    }
+
+    @Override
+    public CoursePublish getCoursePublishFromCache(Long courseId) {
+        boolean contains = bloomFilter.contains(courseId);
+        if (contains){
+            Object jsonObj = redisTemplate.opsForValue().get("course:publish:" + courseId);
+            if (jsonObj!=null){
+                String jsonString=jsonObj.toString();
+                log.debug("从redis中获取课程发布信息：{}",jsonString);
+                return JSON.parseObject(jsonString,CoursePublish.class);
+            }
+            //获取分布式锁
+            RLock lock = redissonClient.getLock("coursequerylock:" + courseId);
+            lock.lock();
+            try{
+                //获取到锁之后先查询从缓存中是否已经存在数据
+                jsonObj = redisTemplate.opsForValue().get("course:publish:" + courseId);
+                if (jsonObj!=null){
+                    String jsonString=jsonObj.toString();
+                    log.debug("从redis中获取课程发布信息：{}",jsonString);
+                    return JSON.parseObject(jsonString,CoursePublish.class);
+                }
+                //从数据库中查询数据
+                CoursePublish coursePublish = coursePublishMapper.selectById(courseId);
+                log.debug("从数据库中查询课程发布信息：{}",coursePublish);
+                //将数据存入redis
+                if (coursePublish!=null){
+                    redisTemplate.opsForValue().set("course:publish:"+courseId,JSON.toJSONString(coursePublish),30, TimeUnit.MINUTES);
+                }
+                return coursePublish;
+            }finally {
+                //释放锁
+                lock.unlock();
+            }
+
+        }
+        log.debug("布隆过滤器不存在课程id：{}",courseId);
+        return null;
+    }
+
+    @Override
+    public void addCourseIdToBloomFilter(Long courseId) {
+        bloomFilter.add(courseId);
     }
 
 

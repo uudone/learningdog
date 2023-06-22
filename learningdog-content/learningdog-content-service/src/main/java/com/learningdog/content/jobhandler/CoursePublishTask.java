@@ -1,5 +1,6 @@
 package com.learningdog.content.jobhandler;
 
+import com.alibaba.fastjson.JSON;
 import com.learningdog.content.po.CoursePublish;
 import com.learningdog.content.service.CoursePublishService;
 import com.learningdog.feign.client.SearchClient;
@@ -11,6 +12,7 @@ import com.xxl.job.core.context.XxlJobHelper;
 import com.xxl.job.core.handler.annotation.XxlJob;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -31,6 +33,8 @@ public class CoursePublishTask extends MessageProcessAbstract {
     CoursePublishService coursePublishService;
     @Resource
     SearchClient searchClient;
+    @Resource
+    RedisTemplate redisTemplate;
 
 
     @XxlJob("coursePublishJobHandler")
@@ -127,17 +131,29 @@ public class CoursePublishTask extends MessageProcessAbstract {
      * @param courseId:
      * @return void
      * @author getjiajia
-     * @description 将课程消息缓存至redis
+     * @description 将课程信息缓存至redis
      */
     public void saveCourseCache(MqMessage mqMessage,long courseId){
-        //todo:执行课程缓存任务
-        log.debug("开始将课程消息缓存至redis，课程id：{}",courseId);
+        //执行课程缓存任务
+        log.debug("开始将课程信息缓存至redis，课程id：{}",courseId);
         //执行缓存到redis任务
-        try{
-            TimeUnit.SECONDS.sleep(2);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+        Long messageId = mqMessage.getId();
+        int stageThree = mqMessageService.getStageThree(messageId);
+        if (stageThree>0){
+            log.debug("课程课程信息已缓存到redis，课程id:{}",courseId);
+            return;
         }
-        log.debug("课程消息成功缓存至redis，课程id：{}",courseId);
+        //从数据库中查询数据
+        CoursePublish coursePublish = coursePublishService.getById(courseId);
+        if (coursePublish==null){
+            log.info("课程缓存信息丢失，课程id:{}",courseId);
+            return;
+        }
+        //将数据存入redis
+        redisTemplate.opsForValue().set("course:publish:"+courseId, JSON.toJSONString(coursePublish),30, TimeUnit.MINUTES);
+        //向布隆过滤器添加数据
+        coursePublishService.addCourseIdToBloomFilter(courseId);
+        mqMessageService.completeStageThree(messageId);
+        log.debug("课程信息成功缓存至redis，课程id：{}",courseId);
     }
 }

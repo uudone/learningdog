@@ -27,9 +27,6 @@ spring:
           - data-id: feign-api-${spring.profiles.active}.yaml
             group: learningdog-common
             refresh: true
-          - data-id: freemarker-config-${spring.profiles.active}.yaml
-            group: learningdog-common
-            refresh: true
           - data-id: sentinel-${spring.profiles.active}.yaml
             group: learningdog-common
             refresh: true

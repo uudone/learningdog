@@ -11,7 +11,7 @@ import javax.annotation.Resource;
 
 /**
  * @author: getjiajia
- * @description: TODO
+ * @description: 微信登录控制器
  * @version: 1.0
  */
 @Controller
